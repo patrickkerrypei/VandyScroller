@@ -263,9 +263,9 @@ end
 --actual function or it will not be able to find it
 --timer.performWithDelay(how often it will run in milliseconds, function to call,
 --how many times to call(-1 means forever))
-timer.performWithDelay(1, update, -1)
-local hero = display.newSprite(spriteSheet, sequenceData);
+timer.performWithDelay(1, update,  100)
 
+local hero = display.newSprite(spriteSheet, sequenceData);
 x = display.contentWidth/2;
 y = display.contentHeight/2;
 right = true;
@@ -278,28 +278,24 @@ physics.addBody(hero)
 hero:play();
 
 --the rest of the code remains the same
-function update()
+function updateHero()
 
-if (right) then
-hero.x = hero.x + 1;
-else
-hero.x = hero.x - 1;
+	if (right) then
+	hero.x = hero.x + 1;
+	else
+	hero.x = hero.x - 1;
+	end
+	if (hero.x > 480) then
+	right = false;
+	hero.xScale = -1;
+	end
+	if (hero.x < 0) then
+	right = true;
+	hero.xScale = 1;
+	end
 end
-if (hero.x > 480) then
-right = false;
-hero.xScale = -1;
-end
-if (hero.x < 0) then
-right = true;
-hero.xScale = 1;
-end
-end
 
-timer.performWithDelay(1, update, -1);
-
-
-
-
+timer.performWithDelay(1, updateHero, 100);
 	
 	-- all display objects must be inserted into group
 	
@@ -312,11 +308,7 @@ timer.performWithDelay(1, update, -1);
 	sceneGroup:insert(backbackground)
 	sceneGroup:insert(backgroundfar)
 	sceneGroup:insert(hero)
-
-
 end
-
-
 
 function scene:show( event )
 	local sceneGroup = self.view
