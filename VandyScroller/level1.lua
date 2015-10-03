@@ -110,7 +110,9 @@ end
 Runtime:addEventListener("touch",stop)
 
 function upButton:tap()
-	hero.y = hero.y -50
+	hero.x = hero.x +20
+	hero.y = hero.y -70
+
 end
 upButton:addEventListener("tap",upButton)
 
@@ -143,9 +145,6 @@ function scene:create( event )
 	display.setStatusBar(display.HiddenStatusBar)
 
 	--adds an image to our game centered at x and y coordinates
-	local backbackground = display.newImage("background.jpg")
-	backbackground.x = 240
-	backbackground.y = 160
 
 	local backgroundfar = display.newImage("bgfar1.png")
 	backgroundfar.x = 480
@@ -163,8 +162,8 @@ function scene:create( event )
 	local blocks = display.newGroup()
 
 	--setup some variables that we will use to position the ground
-	local groundMin = 420
-	local groundMax = 340
+	local groundMin = 370
+	local groundMax = 310
 	local groundLevel = groundMin
 	local speed = 3;
 
@@ -223,21 +222,87 @@ end
 
 
 function updateBlocks()
-	for a = 1, blocks.numChildren, 1 do
-	
-		if(a > 1) then
-			newX = (blocks[a - 1]).x + 79
+     for a = 1, blocks.numChildren, 1 do
+          if(a > 1) then
+               newX = (blocks[a - 1]).x + 79
+          else
+               newX = (blocks[8]).x + 79 - speed
+          end
+          if((blocks[a]).x < -40) then
+     if(inEvent == 11) then
+          (blocks[a]).x, (blocks[a]).y = newX, 600
+     else
+          (blocks[a]).x, (blocks[a]).y = newX, groundLevel
+     end
+     checkEvent()
+else
+     (blocks[a]):translate(speed * -1, 0)
+     checkEvent()
+end
 
-		else
-			newX = (blocks[8]).x + 79 - speed
-		end
+     end
+end
 
-		if((blocks[a]).x < -40) then
-			(blocks[a]).x, (blocks[a]).y = newX, (blocks[a]).y
-		else
-			(blocks[a]):translate(speed * -1, 0)
-		end
-	end
+local inEvent = 0
+local eventRun = 0
+
+function checkEvent()
+     --first check to see if we are already in an event, we only want 1 event going on at a time
+     if(eventRun > 0) then
+          --if we are in an event decrease eventRun. eventRun is a variable that tells us how
+          --much longer the event is going to take place. Everytime we check we need to decrement
+          --it. Then if at this point eventRun is 0 then the event has ended so we set inEvent back
+          --to 0.
+          eventRun = eventRun - 1
+          if(eventRun == 0) then
+               inEvent = 0
+          end
+     end
+     --if we are in an event then do nothing
+     if(inEvent > 0 and eventRun > 0) then
+          --Do nothing
+     else
+          --if we are not in an event check to see if we are going to start a new event. To do this
+          --we generate a random number between 1 and 100. We then check to see if our 'check' is
+          --going to start an event. We are using 100 here in the example because it is easy to determine
+          --the likelihood that an event will fire(We could just as easilt chosen 10 or 1000).
+          --For example, if we decide that an event is going to
+          --start everytime check is over 80 then we know that everytime a block is reset there is a 20%
+          --chance that an event will start. So one in every five blocks should start a new event. This
+          --is where you will have to fit the needs of your game.
+          check = math.random(100)
+ 
+          --this first event is going to cause the elevation of the ground to change. For this game we
+          --only want the elevation to change 1 block at a time so we don't get long runs of changing
+          --elevation that is impossible to pass so we set eventRun to 1.
+          if(check > 60 and check < 99) then
+               --since we are in an event we need to decide what we want to do. By making inEvent another
+               --random number we can now randomly choose which direction we want the elevation to change.
+               inEvent = math.random(10)
+               eventRun = 1
+          end
+     end
+     --if we are in an event call runEvent to figure out if anything special needs to be done
+     if(inEvent > 0) then
+          runEvent()
+     end
+end
+--this function is pretty simple it just checks to see what event should be happening, then
+--updates the appropriate items. Notice that we check to make sure the ground is within a
+--certain range, we don't want the ground to spawn above or below whats visible on the screen.
+function runEvent()
+     if(inEvent < 6) then
+          groundLevel = groundLevel + 20
+     end
+     if(inEvent > 5 and inEvent < 11) then
+          groundLevel = groundLevel - 20
+     end
+     if(groundLevel < groundMax) then
+          groundLevel = groundMax
+     end
+     if(groundLevel > groundMin) then
+          groundLevel = groundMin
+     end
 end
 
 function updateBackgrounds()
@@ -260,16 +325,16 @@ end
 --actual function or it will not be able to find it
 --timer.performWithDelay(how often it will run in milliseconds, function to call,
 --how many times to call(-1 means forever))
-timer.performWithDelay(1, update, 100)
+timer.performWithDelay(1, update, -1)
 
 
 --the rest of the code remains the same
 function update()
 
 if (right) then
-hero.x = hero.x + 1;
+hero.x = hero.x+1;
 else
-hero.x = hero.x - 1;
+hero.x = hero.x+1 ;
 end
 if (hero.x > 480) then
 right = false;
@@ -285,27 +350,26 @@ timer.performWithDelay(1, update, -1);
 
 
 	-- all display objects must be inserted into group
-	
 
-	sceneGroup:insert(backgroundnear2)
 	sceneGroup:insert(backgroundnear1)
-	sceneGroup:insert(backbackground)
 	sceneGroup:insert(backgroundfar)
+	sceneGroup:insert(backgroundnear2)
 	sceneGroup:insert(hero)
 	sceneGroup:insert(upButton)
 	sceneGroup:insert(downButton)
 	sceneGroup:insert(leftButton)
 	sceneGroup:insert(rightButton)
 	
+	
+
+
+
+
+
+
 
 
 end
-
-
-
-
-
-
 
 
 
