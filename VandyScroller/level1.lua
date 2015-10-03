@@ -146,6 +146,7 @@ function scene:create( event )
 	-- define a shape that's slightly shorter than image bounds (set draw mode to "hybrid" or "debug" to see)
 	local grassShape = { -halfW,-34, halfW,-34, halfW,34, -halfW,34 }
 	physics.addBody( grass, "static", { friction=0.3, shape=grassShape } )
+	physics.addBody(healthSprite)
 	
 	-- all display objects must be inserted into group
 	sceneGroup:insert( background )
