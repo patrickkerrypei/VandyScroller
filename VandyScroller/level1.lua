@@ -95,7 +95,8 @@ function scene:create( event )
 	sceneGroup:insert( healthSprite )
 
 	local function myTapListener( event )
-	   	    healthSprite.y = healthSprite.y-100
+	   	    healthSprite.y = healthSprite.y-10
+	   	    healthSprite.x = healthSprite.x+10
 	    return true
 	end
 
