@@ -144,39 +144,39 @@ function scene:create( event )
 	background2.anchorY = 0
 	background2:setFillColor( .5 )
 	
-	-- create a grass object and add physics (with custom shape)
-<<<<<<< HEAD
+	-- create a bg object and add physics (with custom shape)
+
 	local bg = display.newImageRect( "bg.jpg", screenW, 82 )
 	bg.anchorX = 0
 	bg.anchorY = 1
 	bg.x, bg.y = 0, display.contentHeight
 	
 	-- define a shape that's slightly shorter than image bounds (set draw mode to "hybrid" or "debug" to see)
-	local bghape = { -halfW,-34, halfW,-34, halfW,34, -halfW,34 }
+	local bgShape = { -halfW,-34, halfW,-34, halfW,34, -halfW,34 }
 	physics.addBody( bg, "static", { friction=0.3, shape=bgShape } )
-=======
-	local grass = display.newImageRect( "grass.png", screenW*2, 82 )
-	grass.anchorX = 0
-	grass.anchorY = 1
-	grass.x, grass.y = 0, display.contentHeight
 
-	local grass2 = display.newImageRect( "grass.png", screenW, 82 )
-	grass2.anchorX = 1
-	grass2.anchorY = 1
-	grass2.x, grass2.y = 0, display.contentHeight
+	local bg = display.newImageRect( "bg.jpg", screenW*2, 82 )
+	bg.anchorX = 0
+	bg.anchorY = 1
+	bg.x, bg.y = 0, display.contentHeight
+
+	local bg2 = display.newImageRect( "bg.jpg", screenW, 82 )
+	bg2.anchorX = 1
+	bg2.anchorY = 1
+	bg2.x, bg2.y = 0, display.contentHeight
 	
 	-- define a shape that's slightly shorter than image bounds (set draw mode to "hybrid" or "debug" to see)
-	local grassShape = { -halfW,-34, halfW,-34, halfW,34, -halfW,34 }
-	physics.addBody( grass, "static", { friction=0.3, shape=grassShape } )
-	physics.addBody( grass2, "static", { friction=0.3, shape=grassShape } )
->>>>>>> origin/master
+	local bgShape = { -halfW,-34, halfW,-34, halfW,34, -halfW,34 }
+	physics.addBody( bg, "static", { friction=0.3, shape=bgShape } )
+	physics.addBody( bg2, "static", { friction=0.3, shape=bgShape } )
+
 	physics.addBody(healthSprite)
 
 	local function move(event)
 		background.x = background.x - scrollSpeed
 		background2.x = background2.x - scrollSpeed
-		grass.x = grass.x - scrollSpeed
-		grass2.x = grass2.x - scrollSpeed
+		bg.x = bg.x - scrollSpeed
+		bg2.x = bg2.x - scrollSpeed
 
 		if(background.x + background.contentHeight) < 0 then
 			background:translate( 320, 0 )
@@ -184,24 +184,24 @@ function scene:create( event )
 		if(background2.x + background2.contentHeight) < 0 then
 			background2:translate( 400, 0 )
 			end 
-		if(grass.x + grass.contentHeight) < 0 then
-			grass:translate( 320, 0 )
+		if(bg.x + bg.contentHeight) < 0 then
+			bg:translate( 320, 0 )
 			end	
-		if(grass2.x + grass2.contentHeight) < 0 then
-			grass2:translate( 320, 0 )
+		if(bg2.x + bg2.contentHeight) < 0 then
+			bg2:translate( 320, 0 )
 			end	
 	end
 	Runtime:addEventListener( "enterFrame", move )
 	
 	-- all display objects must be inserted into group
 	sceneGroup:insert( background )
-<<<<<<< HEAD
+
 	sceneGroup:insert( bg )
-=======
+
 	sceneGroup:insert(background2)
-	sceneGroup:insert( grass )
-	sceneGroup:insert(grass2)
->>>>>>> origin/master
+	sceneGroup:insert( bg )
+	sceneGroup:insert(bg2)
+
 
 end
 
