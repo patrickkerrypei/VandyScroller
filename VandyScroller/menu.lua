@@ -13,14 +13,14 @@ local widget = require "widget"
 --------------------------------------------
 
 -- forward declarations and other locals
-local playBtn
-
+local playBtn = display.newImage("play_now.png")
+playBtn:scale(0.5,0.5)
+playBtn.x = display.contentWidth * 0.5
+playBtn.y = display.contentHeight * .85
 -- 'onRelease' event listener for playBtn
-local function onPlayBtnRelease()
-	
+function playBtn:touch()
 	-- go to level1.lua scene
 	composer.gotoScene( "level1", "fade", 500 )
-	
 	return true	-- indicates successful touch
 end
 
@@ -39,25 +39,11 @@ function scene:create( event )
 	background.x, background.y = 0, 0
 	
 	-- create/position logo/title image on upper-half of the screen
-	local titleLogo = display.newImageRect( "logo.png", 264, 42 )
-	titleLogo.x = display.contentWidth * 0.5
-	titleLogo.y = 100
 	
 	-- create a widget button (which will loads level1.lua on release)
-	playBtn = widget.newButton{
-		label="Play Now",
-		labelColor = { default={255}, over={128} },
-		default="button.png",
-		over="button-over.png",
-		width=154, height=40,
-		onRelease = onPlayBtnRelease	-- event listener function
-	}
-	playBtn.x = display.contentWidth*0.5
-	playBtn.y = display.contentHeight - 125
 	
 	-- all display objects must be inserted into group
 	sceneGroup:insert( background )
-	sceneGroup:insert( titleLogo )
 	sceneGroup:insert( playBtn )
 end
 
