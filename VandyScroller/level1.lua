@@ -51,24 +51,24 @@ healthSprite.y = display.contentHeight * .5
 
 -- Implementation for BUTTONS
 local upButton = display.newImage("up.png")
-upButton:scale(0.1,0.1)
+upButton:scale(0.5,0.5)
 upButton.x = display.contentWidth * .175
 upButton.y = display.contentHeight * .8
 
 local downButton = display.newImage("down.png")
-downButton:scale(0.1,0.1)
+downButton:scale(0.5,0.5)
 downButton.x = display.contentWidth * .175
 downButton.y = display.contentHeight * .9
 
 
 local leftButton = display.newImage("left.png")
-leftButton:scale(0.1,0.1)
+leftButton:scale(0.5,0.5)
 leftButton.x = display.contentWidth * .1
 leftButton.y = display.contentHeight * .9
 
 
 local rightButton = display.newImage("right.png")
-rightButton:scale(0.1,0.1)
+rightButton:scale(0.5,0.5)
 rightButton.x = display.contentWidth * .25
 rightButton.y = display.contentHeight * .9
 
@@ -96,8 +96,9 @@ Runtime:addEventListener("enterFrame", movething)
 
 function upButton:touch()
 	motionx = 0
-	motiony = -speed
+	motiony = -speed * 2
 end
+
 upButton:addEventListener("touch",upButton)
 
 function downButton:touch()
@@ -138,19 +139,19 @@ function scene:create( event )
 
 	
 	-- create a grass object and add physics (with custom shape)
-	local grass = display.newImageRect( "grass.png", screenW, 82 )
-	grass.anchorX = 0
-	grass.anchorY = 1
-	grass.x, grass.y = 0, display.contentHeight
+	local bg = display.newImageRect( "bg.jpg", screenW, 82 )
+	bg.anchorX = 0
+	bg.anchorY = 1
+	bg.x, bg.y = 0, display.contentHeight
 	
 	-- define a shape that's slightly shorter than image bounds (set draw mode to "hybrid" or "debug" to see)
-	local grassShape = { -halfW,-34, halfW,-34, halfW,34, -halfW,34 }
-	physics.addBody( grass, "static", { friction=0.3, shape=grassShape } )
+	local bghape = { -halfW,-34, halfW,-34, halfW,34, -halfW,34 }
+	physics.addBody( bg, "static", { friction=0.3, shape=bgShape } )
 	physics.addBody(healthSprite)
 	
 	-- all display objects must be inserted into group
 	sceneGroup:insert( background )
-	sceneGroup:insert( grass )
+	sceneGroup:insert( bg )
 
 end
 
