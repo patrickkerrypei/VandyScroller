@@ -67,31 +67,31 @@ local sequenceData =
 
 
 -- Implementation for BUTTONS
-local upButton = display.newImage("up.png")
-upButton:scale(0.5,0.5)
-upButton.x = display.contentWidth * .175
-upButton.y = display.contentHeight * .8
+	local upButton = display.newImage("up.png")
+	upButton:scale(0.5,0.5)
+	upButton.x = display.contentWidth * .175
+	upButton.y = display.contentHeight * .8
 
-local downButton = display.newImage("down.png")
-downButton:scale(0.5,0.5)
-downButton.x = display.contentWidth * .175
-downButton.y = display.contentHeight * .9
-
-
-local leftButton = display.newImage("left.png")
-leftButton:scale(0.5,0.5)
-leftButton.x = display.contentWidth * .1
-leftButton.y = display.contentHeight * .9
+	local downButton = display.newImage("down.png")
+	downButton:scale(0.5,0.5)
+	downButton.x = display.contentWidth * .175
+	downButton.y = display.contentHeight * .9
 
 
-local rightButton = display.newImage("right.png")
-rightButton:scale(0.5,0.5)
-rightButton.x = display.contentWidth * .25
-rightButton.y = display.contentHeight * .9
+	local leftButton = display.newImage("left.png")
+	leftButton:scale(0.5,0.5)
+	leftButton.x = display.contentWidth * .1
+	leftButton.y = display.contentHeight * .9
 
-local motionx = 0
-local motiony = 0
-local speed = 10
+
+	local rightButton = display.newImage("right.png")
+	rightButton:scale(0.5,0.5)
+	rightButton.x = display.contentWidth * .25
+	rightButton.y = display.contentHeight * .9
+	
+	local motionx = 0
+	local motiony = 0
+	local speed = 10
 
 
 local function stop (event)
@@ -101,18 +101,13 @@ local function stop (event)
 	motiony = 0
 	end
 end
-
 Runtime:addEventListener("touch",stop)
-
-
-
 
 
 function upButton:touch()
 	motionx = 0
 	motiony = -speed * 2
 end
-
 upButton:addEventListener("touch",upButton)
 
 function downButton:touch()
@@ -144,38 +139,38 @@ function scene:create( event )
 	local sceneGroup = self.view
 	
 	--takes away the display bar at the top of the screen
-display.setStatusBar(display.HiddenStatusBar)
+	display.setStatusBar(display.HiddenStatusBar)
 
---adds an image to our game centered at x and y coordinates
-local backbackground = display.newImage("background.jpg")
-backbackground.x = 240
-backbackground.y = 160
+	--adds an image to our game centered at x and y coordinates
+	local backbackground = display.newImage("background.jpg")
+	backbackground.x = 240
+	backbackground.y = 160
 
-local backgroundfar = display.newImage("bgfar1.png")
-backgroundfar.x = 480
-backgroundfar.y = 160
+	local backgroundfar = display.newImage("bgfar1.png")
+	backgroundfar.x = 480
+	backgroundfar.y = 160
 
-local backgroundnear1 = display.newImage("bgnear2.png")
-backgroundnear1.x = 240
-backgroundnear1.y = 160
+	local backgroundnear1 = display.newImage("bgnear2.png")
+	backgroundnear1.x = 240
+	backgroundnear1.y = 160
 
-local backgroundnear2 = display.newImage("bgnear2.png")
-backgroundnear2.x = 760
-backgroundnear2.y = 160
+	local backgroundnear2 = display.newImage("bgnear2.png")
+	backgroundnear2.x = 760
+	backgroundnear2.y = 160
 
---create a new group to hold all of our blocks
-local blocks = display.newGroup()
+	--create a new group to hold all of our blocks
+	local blocks = display.newGroup()
 
---setup some variables that we will use to position the ground
-local groundMin = 420
-local groundMax = 340
-local groundLevel = groundMin
-local speed = 3;
+	--setup some variables that we will use to position the ground
+	local groundMin = 420
+	local groundMax = 340
+	local groundLevel = groundMin
+	local speed = 3;
 
---this for loop will generate all of your ground pieces, we are going to
---make 8 in all.
-for a = 1, 8, 1 do
-	isDone = false
+	--this for loop will generate all of your ground pieces, we are going to
+	--make 8 in all.
+	for a = 1, 8, 1 do
+		isDone = false
 
 	--get a random number between 1 and 2, this is what we will use to decide which
 	--texture to use for our ground sprites. Doing this will give us random ground
@@ -257,13 +252,35 @@ function updateBackgrounds()
 	if(backgroundnear2.x < -239) then
 		backgroundnear2.x = 760
 	end
+
+	local upButton = display.newImage("up.png")
+	upButton:scale(0.5,0.5)
+	upButton.x = display.contentWidth * .175
+	upButton.y = display.contentHeight * .8
+
+	local downButton = display.newImage("down.png")
+	downButton:scale(0.5,0.5)
+	downButton.x = display.contentWidth * .175
+	downButton.y = display.contentHeight * .9
+
+
+	local leftButton = display.newImage("left.png")
+	leftButton:scale(0.5,0.5)
+	leftButton.x = display.contentWidth * .1
+	leftButton.y = display.contentHeight * .9
+
+
+	local rightButton = display.newImage("right.png")
+	rightButton:scale(0.5,0.5)
+	rightButton.x = display.contentWidth * .25
+	rightButton.y = display.contentHeight * .9
 end
 
 --this is how we call the update function, make sure that this line comes after the
 --actual function or it will not be able to find it
 --timer.performWithDelay(how often it will run in milliseconds, function to call,
 --how many times to call(-1 means forever))
-timer.performWithDelay(1, update, -1)
+timer.performWithDelay(1, update, 100)
 local hero = display.newSprite(spriteSheet, sequenceData);
 
 x = display.contentWidth/2;
@@ -303,14 +320,15 @@ timer.performWithDelay(1, update, -1);
 	
 	-- all display objects must be inserted into group
 	
-	sceneGroup:insert(upButton)
-	sceneGroup:insert(downButton)
-	sceneGroup:insert(leftButton)
-	sceneGroup:insert(rightButton)
+
 	sceneGroup:insert(backgroundnear2)
 	sceneGroup:insert(backgroundnear1)
 	sceneGroup:insert(backbackground)
 	sceneGroup:insert(backgroundfar)
+	sceneGroup:insert(upButton)
+	sceneGroup:insert(downButton)
+	sceneGroup:insert(leftButton)
+	sceneGroup:insert(rightButton)
 	sceneGroup:insert(hero)
 
 
