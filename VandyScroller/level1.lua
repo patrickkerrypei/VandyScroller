@@ -6,6 +6,34 @@
 
 local composer = require( "composer" )
 local scene = composer.newScene()
+local options = {
+	width = 60,
+	height = 20,
+	numFrames = 6
+}
+
+local sequenceData = {
+    { name = "health0", start=1, count=1, time=0,   loopCount=1 },
+    { name = "health1", start=1, count=2, time=100, loopCount=1 },
+    { name = "health2", start=1, count=3, time=200, loopCount=1 },
+    { name = "health3", start=1, count=4, time=300, loopCount=1 },
+    { name = "health4", start=1, count=5, time=400, loopCount=1 },
+    { name = "health5", start=1, count=6, time=500, loopCount=1 }
+	}
+
+-- sequences table
+local sequences_healthSheet = {
+    -- consecutive frames sequence
+    {
+        name = "healthSprite",
+        start = 1,
+        count = 5,
+        time = 800,
+        loopCount = 0,
+        loopDirection = "forward"
+    }
+}
+
 
 -- include Corona's "physics" library
 local physics = require "physics"
@@ -24,12 +52,24 @@ function scene:create( event )
 	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 
 	local sceneGroup = self.view
+	local healthSheet = graphics.newImageSheet("health_bar.png", options)
+	
+	local healthSprite = display.newSprite( healthSheet, sequences_healthSheet)
+	
+	healthSprite.x = display.contentWidth * .5
+	healthSprite.y = display.contentHeight * .5
+
+
+	healthSprite:play()
+	healthSprite:applyLinearImpulse(10, 0)
+	
 
 	-- create a grey rectangle as the backdrop
 	local background = display.newRect( 0, 0, screenW, screenH )
 	background.anchorX = 0
 	background.anchorY = 0
 	background:setFillColor( .5 )
+
 	
 	-- make a crate (off-screen), position it, and rotate slightly
 	local crate = display.newImageRect( "crate.png", 90, 90 )
@@ -51,8 +91,9 @@ function scene:create( event )
 	
 	-- all display objects must be inserted into group
 	sceneGroup:insert( background )
-	sceneGroup:insert( grass)
+	sceneGroup:insert( grass )
 	sceneGroup:insert( crate )
+	sceneGroup:insert( healthSprite )
 end
 
 
