@@ -8,21 +8,11 @@ local composer = require( "composer" )
 local scene = composer.newScene()
 
 -- include Corona's "widget" library
-local widget = require "widget"
+
 
 --------------------------------------------
 
 -- forward declarations and other locals
-local playBtn = display.newImage("play_now.png")
-playBtn:scale(0.5,0.5)
-playBtn.x = display.contentWidth * 0.5
-playBtn.y = display.contentHeight * .85
--- 'onRelease' event listener for playBtn
-function playBtn:touch()
-	-- go to level1.lua scene
-	composer.gotoScene( "level1", "fade", 500 )
-	return true	-- indicates successful touch
-end
 
 function scene:create( event )
 	local sceneGroup = self.view
@@ -41,7 +31,17 @@ function scene:create( event )
 	-- create/position logo/title image on upper-half of the screen
 	
 	-- create a widget button (which will loads level1.lua on release)
-	
+	local playBtn = display.newImage("play_now.png")
+	playBtn:scale(0.5,0.5)
+	playBtn.x = display.contentWidth * 0.5
+	playBtn.y = display.contentHeight * .85
+	-- 'onRelease' event listener for playBtn
+	function playBtn:touch()
+	-- go to level1.lua scene
+		composer.gotoScene( "level1", "fade", 500 )
+	-- indicates successful touch
+	end
+	playBtn:addEventListener("touch",playBtn)
 	-- all display objects must be inserted into group
 	sceneGroup:insert( background )
 	sceneGroup:insert( playBtn )
@@ -83,10 +83,6 @@ function scene:destroy( event )
 	-- INSERT code here to cleanup the scene
 	-- e.g. remove display objects, remove touch listeners, save state, etc.
 	
-	if playBtn then
-		playBtn:removeSelf()	-- widgets must be manually removed
-		playBtn = nil
-	end
 end
 
 ---------------------------------------------------------------------------------
