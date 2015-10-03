@@ -189,13 +189,13 @@ for a = 1, 8, 1 do
 	print (numGen)
 	if(numGen == 1 and isDone == false) then
 		newBlock = display.newImage("rocks.jpg")
-		
+		physics.addBody( newBlock, "kinematic", { frictional=0.3} )
 		isDone = true
 	end
 
 	if(numGen == 2 and isDone == false) then
 		newBlock = display.newImage("rocks.jpg")
-
+		physics.addBody( newBlock, "kinematic", { frictional=0.3} )
 		isDone = true
 	end
 
