@@ -93,6 +93,15 @@ function scene:create( event )
 	sceneGroup:insert( grass )
 	sceneGroup:insert( crate )
 	sceneGroup:insert( healthSprite )
+
+	local function myTapListener( event )
+	   	    healthSprite.y = healthSprite.y-100
+	    return true
+	end
+
+	local myButton = display.newRect( 0,0,100,100)
+	myButton:addEventListener( "tap", myTapListener )
+
 end
 
 
