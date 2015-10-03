@@ -45,34 +45,7 @@ physics.setGravity(0,6)
 -- forward declarations and other locals
 local screenW, screenH, halfW = display.contentWidth, display.contentHeight, display.contentWidth*0.5
 
-local healthSheet = graphics.newImageSheet("health_bar.png", options)
-local healthSprite = display.newSprite( healthSheet, sequences_healthSheet)
-x = display.contentWidth/2;
-y = display.contentHeight/2;
-right = true;
-healthSprite.x = x;
-healthSprite.y = y;
-healthSprite:setSequence("health0")
-healthSprite:play()
 
-function update()
-
-if (right) then
-healthSprite.x = healthSprite.x + 3;
-else
-healthSprite.x = healthSprite.x - 3;
-end
-if (healthSprite.x > 480) then
-right = false;
-healthSprite.xScale = -1;
-end
-if (healthSprite.x < 0) then
-right = true;
-healthSprite.xScale = 1;
-end
-end
-
-timer.performWithDelay(1, update, -1);
 
 -- Implementation for BUTTONS
 local upButton = display.newImage("up.png")
@@ -112,12 +85,7 @@ end
 
 Runtime:addEventListener("touch",stop)
 
-local function movething ( event ) 
-	healthSprite.x = healthSprite.x + motionx
-	healthSprite.y = healthSprite.y + motiony
-end
 
-Runtime:addEventListener("enterFrame", movething)
 
 function upButton:touch()
 	motionx = 0
@@ -158,7 +126,7 @@ function scene:create( event )
 display.setStatusBar(display.HiddenStatusBar)
 
 --adds an image to our game centered at x and y coordinates
-local backbackground = display.newImage("background.png")
+local backbackground = display.newImage("background.jpg")
 backbackground.x = 240
 backbackground.y = 160
 
@@ -181,7 +149,7 @@ local blocks = display.newGroup()
 local groundMin = 420
 local groundMax = 340
 local groundLevel = groundMin
-local speed = 10;
+local speed = 3;
 
 --this for loop will generate all of your ground pieces, we are going to
 --make 8 in all.
@@ -195,14 +163,17 @@ for a = 1, 8, 1 do
 	--up the number in math.random(x) to however many textures you have.
 	numGen = math.random(2)
 	local newBlock
+	local blockShape = { -halfW,-34, halfW,-34, halfW,34, -halfW,34 }
 	print (numGen)
 	if(numGen == 1 and isDone == false) then
-		newBlock = display.newImage("ground1.png")
+		newBlock = display.newImage("rocks.jpg")
+		physics.addBody( newBlock, "static", { friction=0.3, shape=blockShape } )
 		isDone = true
 	end
 
 	if(numGen == 2 and isDone == false) then
-		newBlock = display.newImage("ground2.png")
+		newBlock = display.newImage("rocks.jpg")
+		physics.addBody( newBlock, "static", { friction=0.3, shape=blockShape } )
 		isDone = true
 	end
 
@@ -219,6 +190,7 @@ for a = 1, 8, 1 do
 	newBlock.y = groundLevel
 	blocks:insert(newBlock)
 end
+
 
 --the update function will control most everything that happens in our game
 --this will be called every frame(30 frames per second in our case, which is the Corona SDK default)
@@ -268,18 +240,25 @@ end
 --timer.performWithDelay(how often it will run in milliseconds, function to call,
 --how many times to call(-1 means forever))
 timer.performWithDelay(1, update, -1)
+local healthSheet = graphics.newImageSheet("health_bar.png", options)
+local healthSprite = display.newSprite( healthSheet, sequences_healthSheet)
+x = display.contentWidth/2;
+y = display.contentHeight/2;
+healthSprite.x = x;
+healthSprite.y = y;
+healthSprite:setSequence("health0")
+physics.addBody(healthSprite)
+healthSprite:play()
 
 
 
-	physics.addBody(healthSprite)
+
 
 
 	
 	-- all display objects must be inserted into group
 	
-	
-
-
+	sceneGroup:insert(healthSprite)
 	sceneGroup:insert(upButton)
 	sceneGroup:insert(downButton)
 	sceneGroup:insert(leftButton)
