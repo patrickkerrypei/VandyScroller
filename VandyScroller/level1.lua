@@ -130,8 +130,6 @@ function scene:create( event )
 	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 
 	local sceneGroup = self.view
-
-
 	
 	-- create a grey rectangle as the backdrop
 	local background = display.newRect( 0, 0, screenW*3, screenH )
@@ -144,17 +142,7 @@ function scene:create( event )
 	background2.anchorY = 0
 	background2:setFillColor( .5 )
 	
-	-- create a bg object and add physics (with custom shape)
-
-	local bg = display.newImageRect( "bg.jpg", screenW, 82 )
-	bg.anchorX = 0
-	bg.anchorY = 1
-	bg.x, bg.y = 0, display.contentHeight
 	
-	-- define a shape that's slightly shorter than image bounds (set draw mode to "hybrid" or "debug" to see)
-	local bgShape = { -halfW,-34, halfW,-34, halfW,34, -halfW,34 }
-	physics.addBody( bg, "static", { friction=0.3, shape=bgShape } )
-
 	local bg = display.newImageRect( "bg.jpg", screenW*2, 82 )
 	bg.anchorX = 0
 	bg.anchorY = 1
@@ -194,13 +182,18 @@ function scene:create( event )
 	Runtime:addEventListener( "enterFrame", move )
 	
 	-- all display objects must be inserted into group
+	
 	sceneGroup:insert( background )
 
-	sceneGroup:insert( bg )
 
 	sceneGroup:insert(background2)
 	sceneGroup:insert( bg )
 	sceneGroup:insert(bg2)
+
+	sceneGroup:insert(upButton)
+	sceneGroup:insert(downButton)
+	sceneGroup:insert(leftButton)
+	sceneGroup:insert(rightButton)
 
 
 end
