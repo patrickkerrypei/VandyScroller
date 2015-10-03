@@ -7,9 +7,9 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 local options = {
-	width = 60,
-	height = 20,
-	numFrames = 6
+	width = 50,
+	height = 60,
+	numFrames = 2
 }
 
 local sequenceData = {
@@ -52,8 +52,8 @@ y = display.contentHeight/2;
 right = true;
 healthSprite.x = x;
 healthSprite.y = y;
-healthSprite:setSequence("health0");
-healthSprite:play();
+healthSprite:setSequence("health0")
+healthSprite:play()
 
 function update()
 
@@ -158,19 +158,19 @@ function scene:create( event )
 display.setStatusBar(display.HiddenStatusBar)
 
 --adds an image to our game centered at x and y coordinates
-local backbackground = display.newImage("images/background.png")
+local backbackground = display.newImage("background.png")
 backbackground.x = 240
 backbackground.y = 160
 
-local backgroundfar = display.newImage("images/bgfar1.png")
+local backgroundfar = display.newImage("bgfar1.png")
 backgroundfar.x = 480
 backgroundfar.y = 160
 
-local backgroundnear1 = display.newImage("images/bgnear2.png")
+local backgroundnear1 = display.newImage("bgnear2.png")
 backgroundnear1.x = 240
 backgroundnear1.y = 160
 
-local backgroundnear2 = display.newImage("images/bgnear2.png")
+local backgroundnear2 = display.newImage("bgnear2.png")
 backgroundnear2.x = 760
 backgroundnear2.y = 160
 
@@ -197,12 +197,12 @@ for a = 1, 8, 1 do
 	local newBlock
 	print (numGen)
 	if(numGen == 1 and isDone == false) then
-		newBlock = display.newImage("images/ground1.png")
+		newBlock = display.newImage("ground1.png")
 		isDone = true
 	end
 
 	if(numGen == 2 and isDone == false) then
-		newBlock = display.newImage("images/ground2.png")
+		newBlock = display.newImage("ground2.png")
 		isDone = true
 	end
 
