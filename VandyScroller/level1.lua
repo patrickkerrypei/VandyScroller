@@ -135,12 +135,12 @@ function scene:create( event )
 	local background = display.newRect( 0, 0, screenW*3, screenH )
 	background.anchorX = 0
 	background.anchorY = 0
-	background:setFillColor( .5 )
+	background:setFillColor( 0 )
 
 	local background2 = display.newRect( 0, 0, screenW, screenH )
 	background2.anchorX = 1
 	background2.anchorY = 0
-	background2:setFillColor( .5 )
+	background2:setFillColor( 0 )
 	
 	
 	local bg = display.newImageRect( "bg.jpg", screenW*2, 82 )
@@ -167,16 +167,16 @@ function scene:create( event )
 		bg2.x = bg2.x - scrollSpeed
 
 		if(background.x + background.contentHeight) < 0 then
-			background:translate( 320, 0 )
+			background:translate( 3200, 0 )
 			end
 		if(background2.x + background2.contentHeight) < 0 then
-			background2:translate( 400, 0 )
+			background2:translate( 4000, 0 )
 			end 
 		if(bg.x + bg.contentHeight) < 0 then
-			bg:translate( 320, 0 )
+			bg:translate( 20, 0 )
 			end	
 		if(bg2.x + bg2.contentHeight) < 0 then
-			bg2:translate( 320, 0 )
+			bg2:translate( 20, 0 )
 			end	
 	end
 	Runtime:addEventListener( "enterFrame", move )
