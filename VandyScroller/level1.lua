@@ -57,19 +57,25 @@ healthSprite.y = display.contentHeight * .5
 -- Implementation for BUTTONS
 local upButton = display.newImage("up.png")
 upButton:scale(0.1,0.1)
-upButton.x = display.contentWidth * .5
-upButton.y = display.contentHeight * .5
+upButton.x = display.contentWidth * .175
+upButton.y = display.contentHeight * .8
 
 local downButton = display.newImage("down.png")
 downButton:scale(0.1,0.1)
+downButton.x = display.contentWidth * .175
+downButton.y = display.contentHeight * .9
 
 
 local leftButton = display.newImage("left.png")
 leftButton:scale(0.1,0.1)
+leftButton.x = display.contentWidth * .1
+leftButton.y = display.contentHeight * .9
 
 
 local rightButton = display.newImage("right.png")
 rightButton:scale(0.1,0.1)
+rightButton.x = display.contentWidth * .25
+rightButton.y = display.contentHeight * .9
 
 local motionx = 0
 local motiony = 0
