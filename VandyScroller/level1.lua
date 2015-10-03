@@ -109,20 +109,10 @@ local function stop (event)
 end
 Runtime:addEventListener("touch",stop)
 
-local function upButton2(event)
-	if event.phase == "began" then
-
-	hero.x = hero.x
-	hero.y = hero.y + 10
-	end
+function upButton:tap()
+	hero.y = hero.y -50
 end
-Runtime:addEventListener("tap",upButton2)
-
-
-function upButton:touch()
-	hero.y = hero.y -speed*5
-end
-upButton:addEventListener("tap",upButton2)
+upButton:addEventListener("tap",upButton)
 
 function downButton:touch()
 	hero.y = hero.y + speed
