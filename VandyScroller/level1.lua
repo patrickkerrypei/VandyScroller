@@ -6,6 +6,7 @@
 
 local composer = require( "composer" )
 local scene = composer.newScene()
+scrollSpeed = 2
 local options = {
 	width = 60,
 	height = 20,
@@ -38,6 +39,7 @@ local sequences_healthSheet = {
 -- include Corona's "physics" library
 local physics = require "physics"
 physics.start(); physics.pause()
+physics.setGravity(0,6)
 
 --------------------------------------------
 
@@ -131,26 +133,59 @@ function scene:create( event )
 
 	
 	-- create a grey rectangle as the backdrop
-	local background = display.newRect( 0, 0, screenW, screenH )
+	local background = display.newRect( 0, 0, screenW*3, screenH )
 	background.anchorX = 0
 	background.anchorY = 0
 	background:setFillColor( .5 )
 
+	local background2 = display.newRect( 0, 0, screenW, screenH )
+	background2.anchorX = 1
+	background2.anchorY = 0
+	background2:setFillColor( .5 )
 	
 	-- create a grass object and add physics (with custom shape)
-	local grass = display.newImageRect( "grass.png", screenW, 82 )
+	local grass = display.newImageRect( "grass.png", screenW*2, 82 )
 	grass.anchorX = 0
 	grass.anchorY = 1
 	grass.x, grass.y = 0, display.contentHeight
+
+	local grass2 = display.newImageRect( "grass.png", screenW, 82 )
+	grass2.anchorX = 1
+	grass2.anchorY = 1
+	grass2.x, grass2.y = 0, display.contentHeight
 	
 	-- define a shape that's slightly shorter than image bounds (set draw mode to "hybrid" or "debug" to see)
 	local grassShape = { -halfW,-34, halfW,-34, halfW,34, -halfW,34 }
 	physics.addBody( grass, "static", { friction=0.3, shape=grassShape } )
+	physics.addBody( grass2, "static", { friction=0.3, shape=grassShape } )
 	physics.addBody(healthSprite)
+
+	local function move(event)
+		background.x = background.x - scrollSpeed
+		background2.x = background2.x - scrollSpeed
+		grass.x = grass.x - scrollSpeed
+		grass2.x = grass2.x - scrollSpeed
+
+		if(background.x + background.contentHeight) < 0 then
+			background:translate( 320, 0 )
+			end
+		if(background2.x + background2.contentHeight) < 0 then
+			background2:translate( 400, 0 )
+			end 
+		if(grass.x + grass.contentHeight) < 0 then
+			grass:translate( 320, 0 )
+			end	
+		if(grass2.x + grass2.contentHeight) < 0 then
+			grass2:translate( 320, 0 )
+			end	
+	end
+	Runtime:addEventListener( "enterFrame", move )
 	
 	-- all display objects must be inserted into group
 	sceneGroup:insert( background )
+	sceneGroup:insert(background2)
 	sceneGroup:insert( grass )
+	sceneGroup:insert(grass2)
 
 end
 
