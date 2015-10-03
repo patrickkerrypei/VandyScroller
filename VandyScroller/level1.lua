@@ -63,68 +63,79 @@ local sequenceData =
 }
 
 --And assign it to the object hero using the display.newSprite function
+local hero = display.newSprite(spriteSheet, sequenceData);
 
+x = display.contentWidth/2;
+y = display.contentHeight/2;
+right = true;
+hero.x = x;
+hero.y = y;
 
-
+hero:setSequence("running");
+physics.addBody(hero)
+hero:play();
 -- Implementation for BUTTONS
-	local upButton = display.newImage("up.png")
-	upButton:scale(0.5,0.5)
-	upButton.x = display.contentWidth * .175
-	upButton.y = display.contentHeight * .8
+local upButton = display.newImage("up.png")
+upButton:scale(0.5,0.5)
+upButton.x = display.contentWidth * .175
+upButton.y = display.contentHeight * .8 -25
 
-	local downButton = display.newImage("down.png")
-	downButton:scale(0.5,0.5)
-	downButton.x = display.contentWidth * .175
-	downButton.y = display.contentHeight * .9
+local downButton = display.newImage("down.png")
+downButton:scale(0.5,0.5)
+downButton.x = display.contentWidth * .175
+downButton.y = display.contentHeight * .9 -25
 
+local leftButton = display.newImage("left.png")
+leftButton:scale(0.5,0.5)
+leftButton.x = display.contentWidth * .1
+leftButton.y = display.contentHeight * .9 -25
 
-	local leftButton = display.newImage("left.png")
-	leftButton:scale(0.5,0.5)
-	leftButton.x = display.contentWidth * .1
-	leftButton.y = display.contentHeight * .9
+local rightButton = display.newImage("right.png")
+rightButton:scale(0.5,0.5)
+rightButton.x = display.contentWidth * .25
+rightButton.y = display.contentHeight * .9 -25
 
-
-	local rightButton = display.newImage("right.png")
-	rightButton:scale(0.5,0.5)
-	rightButton.x = display.contentWidth * .25
-	rightButton.y = display.contentHeight * .9
-	
-	local motionx = 0
-	local motiony = 0
-	local speed = 10
+hero.x = 0
+hero.y = 0
+local speed = 10
 
 
 local function stop (event)
 	if event.phase == "ended" then
 
-	motionx = 0
-	motiony = 0
+	hero.x = hero.x
+	hero.y = hero.y
 	end
 end
 Runtime:addEventListener("touch",stop)
 
+local function upButton2(event)
+	if event.phase == "began" then
+
+	hero.x = hero.x
+	hero.y = hero.y + 10
+	end
+end
+Runtime:addEventListener("tap",upButton2)
+
 
 function upButton:touch()
-	motionx = 0
-	motiony = -speed * 2
+	hero.y = hero.y -speed*5
 end
-upButton:addEventListener("touch",upButton)
+upButton:addEventListener("tap",upButton2)
 
 function downButton:touch()
-	motionx = 0
-	motiony = speed
+	hero.y = hero.y + speed
 end
 downButton:addEventListener("touch",downButton)
 
 function leftButton:touch()
-	motionx = -speed
-	motiony = 0
+	hero.x = hero.x -speed
 end
 leftButton:addEventListener("touch",leftButton)
 
 function rightButton:touch()
-	motionx = speed
-	motiony = 0
+	hero.x = hero.x + speed
 end
 rightButton:addEventListener("touch",rightButton)
 
@@ -216,6 +227,7 @@ local function update( event )
 	updateBackgrounds()
 	updateBlocks()
 	speed = speed
+
 end
 
 
@@ -252,28 +264,6 @@ function updateBackgrounds()
 	if(backgroundnear2.x < -239) then
 		backgroundnear2.x = 760
 	end
-
-	local upButton = display.newImage("up.png")
-	upButton:scale(0.5,0.5)
-	upButton.x = display.contentWidth * .175
-	upButton.y = display.contentHeight * .8
-
-	local downButton = display.newImage("down.png")
-	downButton:scale(0.5,0.5)
-	downButton.x = display.contentWidth * .175
-	downButton.y = display.contentHeight * .9
-
-
-	local leftButton = display.newImage("left.png")
-	leftButton:scale(0.5,0.5)
-	leftButton.x = display.contentWidth * .1
-	leftButton.y = display.contentHeight * .9
-
-
-	local rightButton = display.newImage("right.png")
-	rightButton:scale(0.5,0.5)
-	rightButton.x = display.contentWidth * .25
-	rightButton.y = display.contentHeight * .9
 end
 
 --this is how we call the update function, make sure that this line comes after the
@@ -281,18 +271,7 @@ end
 --timer.performWithDelay(how often it will run in milliseconds, function to call,
 --how many times to call(-1 means forever))
 timer.performWithDelay(1, update, 100)
-local hero = display.newSprite(spriteSheet, sequenceData);
 
-x = display.contentWidth/2;
-y = display.contentHeight/2;
-right = true;
-hero.x = x;
-hero.y = y;
-
---Then, instead of using the prepare method, we use setSequence
-hero:setSequence("running");
-physics.addBody(hero)
-hero:play();
 
 --the rest of the code remains the same
 function update()
@@ -315,9 +294,6 @@ end
 timer.performWithDelay(1, update, -1);
 
 
-
-
-	
 	-- all display objects must be inserted into group
 	
 
@@ -325,14 +301,35 @@ timer.performWithDelay(1, update, -1);
 	sceneGroup:insert(backgroundnear1)
 	sceneGroup:insert(backbackground)
 	sceneGroup:insert(backgroundfar)
+	sceneGroup:insert(hero)
 	sceneGroup:insert(upButton)
 	sceneGroup:insert(downButton)
 	sceneGroup:insert(leftButton)
 	sceneGroup:insert(rightButton)
-	sceneGroup:insert(hero)
+	
 
 
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
