@@ -44,6 +44,80 @@ physics.start(); physics.pause()
 -- forward declarations and other locals
 local screenW, screenH, halfW = display.contentWidth, display.contentHeight, display.contentWidth*0.5
 
+local background = display.newRect( 0, 0, screenW, screenH )
+background.anchorX = 0
+background.anchorY = 0
+background:setFillColor( .5 )
+
+local healthSheet = graphics.newImageSheet("health_bar.png", options)
+local healthSprite = display.newSprite( healthSheet, sequences_healthSheet)
+healthSprite.x = display.contentWidth * .5
+healthSprite.y = display.contentHeight * .5
+
+-- Implementation for BUTTONS
+local upButton = display.newImage("up.png")
+upButton:scale(0.1,0.1)
+upButton.x = display.contentWidth * .5
+upButton.y = display.contentHeight * .5
+
+local downButton = display.newImage("down.png")
+downButton:scale(0.1,0.1)
+
+
+local leftButton = display.newImage("left.png")
+leftButton:scale(0.1,0.1)
+
+
+local rightButton = display.newImage("right.png")
+rightButton:scale(0.1,0.1)
+
+local motionx = 0
+local motiony = 0
+local speed = 10
+
+
+local function stop (event)
+	if event.phase == "ended" then
+
+	motionx = 0
+	motiony = 0
+	end
+end
+
+Runtime:addEventListener("touch",stop)
+
+local function movething ( event ) 
+	healthSprite.x = healthSprite.x + motionx
+	healthSprite.y = healthSprite.y + motiony
+end
+
+Runtime:addEventListener("enterFrame", movething)
+
+function upButton:touch()
+	motionx = 0
+	motiony = -speed
+end
+upButton:addEventListener("touch",upButton)
+
+function downButton:touch()
+	motionx = 0
+	motiony = speed
+end
+downButton:addEventListener("touch",downButton)
+
+function leftButton:touch()
+	motionx = -speed
+	motiony = 0
+end
+leftButton:addEventListener("touch",leftButton)
+
+function rightButton:touch()
+	motionx = speed
+	motiony = 0
+end
+rightButton:addEventListener("touch",rightButton)
+
+
 function scene:create( event )
 
 	-- Called when the scene's view does not exist.
@@ -52,31 +126,15 @@ function scene:create( event )
 	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 
 	local sceneGroup = self.view
-	local healthSheet = graphics.newImageSheet("health_bar.png", options)
-	
-	local healthSprite = display.newSprite( healthSheet, sequences_healthSheet)
-	
-	healthSprite.x = display.contentWidth * .5
-	healthSprite.y = display.contentHeight * .5
 
 
-	healthSprite:play()
 	
-
 	-- create a grey rectangle as the backdrop
 	local background = display.newRect( 0, 0, screenW, screenH )
 	background.anchorX = 0
 	background.anchorY = 0
 	background:setFillColor( .5 )
 
-	
-	-- make a crate (off-screen), position it, and rotate slightly
-	local crate = display.newImageRect( "crate.png", 90, 90 )
-	crate.x, crate.y = 160, -100
-	crate.rotation = 15
-	
-	-- add physics to the crate
-	physics.addBody( crate, { density=1.0, friction=0.3, bounce=0.3 } )
 	
 	-- create a grass object and add physics (with custom shape)
 	local grass = display.newImageRect( "grass.png", screenW, 82 )
@@ -91,19 +149,9 @@ function scene:create( event )
 	-- all display objects must be inserted into group
 	sceneGroup:insert( background )
 	sceneGroup:insert( grass )
-	sceneGroup:insert( crate )
-	sceneGroup:insert( healthSprite )
-
-	local function myTapListener( event )
-	   	    healthSprite.y = healthSprite.y-10
-	   	    healthSprite.x = healthSprite.x+10
-	    return true
-	end
-
-	local myButton = display.newRect( 0,0,100,100)
-	myButton:addEventListener( "tap", myTapListener )
 
 end
+
 
 
 function scene:show( event )
