@@ -6,7 +6,6 @@
 
 local composer = require( "composer" )
 local scene = composer.newScene()
-scrollSpeed = 2
 local options = {
 	width = 60,
 	height = 20,
@@ -48,8 +47,32 @@ local screenW, screenH, halfW = display.contentWidth, display.contentHeight, dis
 
 local healthSheet = graphics.newImageSheet("health_bar.png", options)
 local healthSprite = display.newSprite( healthSheet, sequences_healthSheet)
-healthSprite.x = display.contentWidth * .5
-healthSprite.y = display.contentHeight * .5
+x = display.contentWidth/2;
+y = display.contentHeight/2;
+right = true;
+healthSprite.x = x;
+healthSprite.y = y;
+healthSprite:setSequence("health0");
+healthSprite:play();
+
+function update()
+
+if (right) then
+healthSprite.x = healthSprite.x + 3;
+else
+healthSprite.x = healthSprite.x - 3;
+end
+if (healthSprite.x > 480) then
+right = false;
+healthSprite.xScale = -1;
+end
+if (healthSprite.x < 0) then
+right = true;
+healthSprite.xScale = 1;
+end
+end
+
+timer.performWithDelay(1, update, -1);
 
 -- Implementation for BUTTONS
 local upButton = display.newImage("up.png")
@@ -131,64 +154,131 @@ function scene:create( event )
 
 	local sceneGroup = self.view
 	
-	-- create a grey rectangle as the backdrop
-	local background = display.newRect( 0, 0, screenW*3, screenH )
-	background.anchorX = 0
-	background.anchorY = 0
-	background:setFillColor( 0 )
+	--takes away the display bar at the top of the screen
+display.setStatusBar(display.HiddenStatusBar)
 
-	local background2 = display.newRect( 0, 0, screenW, screenH )
-	background2.anchorX = 1
-	background2.anchorY = 0
-	background2:setFillColor( 0 )
-	
-	
-	local bg = display.newImageRect( "bg.jpg", screenW*2, 82 )
-	bg.anchorX = 0
-	bg.anchorY = 1
-	bg.x, bg.y = 0, display.contentHeight
+--adds an image to our game centered at x and y coordinates
+local backbackground = display.newImage("images/background.png")
+backbackground.x = 240
+backbackground.y = 160
 
-	local bg2 = display.newImageRect( "bg.jpg", screenW, 82 )
-	bg2.anchorX = 1
-	bg2.anchorY = 1
-	bg2.x, bg2.y = 0, display.contentHeight
-	
-	-- define a shape that's slightly shorter than image bounds (set draw mode to "hybrid" or "debug" to see)
-	local bgShape = { -halfW,-34, halfW,-34, halfW,34, -halfW,34 }
-	physics.addBody( bg, "static", { friction=0.3, shape=bgShape } )
-	physics.addBody( bg2, "static", { friction=0.3, shape=bgShape } )
+local backgroundfar = display.newImage("images/bgfar1.png")
+backgroundfar.x = 480
+backgroundfar.y = 160
+
+local backgroundnear1 = display.newImage("images/bgnear2.png")
+backgroundnear1.x = 240
+backgroundnear1.y = 160
+
+local backgroundnear2 = display.newImage("images/bgnear2.png")
+backgroundnear2.x = 760
+backgroundnear2.y = 160
+
+--create a new group to hold all of our blocks
+local blocks = display.newGroup()
+
+--setup some variables that we will use to position the ground
+local groundMin = 420
+local groundMax = 340
+local groundLevel = groundMin
+local speed = 10;
+
+--this for loop will generate all of your ground pieces, we are going to
+--make 8 in all.
+for a = 1, 8, 1 do
+	isDone = false
+
+	--get a random number between 1 and 2, this is what we will use to decide which
+	--texture to use for our ground sprites. Doing this will give us random ground
+	--pieces so it seems like the ground goes on forever. You can have as many different
+	--textures as you want. The more you have the more random it will be, just remember to
+	--up the number in math.random(x) to however many textures you have.
+	numGen = math.random(2)
+	local newBlock
+	print (numGen)
+	if(numGen == 1 and isDone == false) then
+		newBlock = display.newImage("images/ground1.png")
+		isDone = true
+	end
+
+	if(numGen == 2 and isDone == false) then
+		newBlock = display.newImage("images/ground2.png")
+		isDone = true
+	end
+
+	--now that we have the right image for the block we are going
+	--to give it some member variables that will help us keep track
+	--of each block as well as position them where we want them.
+	newBlock.name = ("block" .. a)
+	newBlock.id = a
+
+	--because a is a variable that is being changed each run we can assign
+	--values to the block based on a. In this case we want the x position to
+	--be positioned the width of a block apart.
+	newBlock.x = (a * 79) - 79
+	newBlock.y = groundLevel
+	blocks:insert(newBlock)
+end
+
+--the update function will control most everything that happens in our game
+--this will be called every frame(30 frames per second in our case, which is the Corona SDK default)
+local function update( event )
+	--updateBackgrounds will call a function made specifically to handle the background movement
+	updateBackgrounds()
+	updateBlocks()
+	speed = speed
+end
+
+
+
+function updateBlocks()
+	for a = 1, blocks.numChildren, 1 do
+		if(a > 1) then
+			newX = (blocks[a - 1]).x + 79
+		else
+			newX = (blocks[8]).x + 79 - speed
+		end
+
+		if((blocks[a]).x < -40) then
+			(blocks[a]).x, (blocks[a]).y = newX, (blocks[a]).y
+		else
+			(blocks[a]):translate(speed * -1, 0)
+		end
+	end
+end
+
+function updateBackgrounds()
+	--far background movement
+	backgroundfar.x = backgroundfar.x - (speed/55)
+
+	--near background movement
+	backgroundnear1.x = backgroundnear1.x - (speed/5)
+	if(backgroundnear1.x < -239) then
+		backgroundnear1.x = 760
+	end
+
+	backgroundnear2.x = backgroundnear2.x - (speed/5)
+	if(backgroundnear2.x < -239) then
+		backgroundnear2.x = 760
+	end
+end
+
+--this is how we call the update function, make sure that this line comes after the
+--actual function or it will not be able to find it
+--timer.performWithDelay(how often it will run in milliseconds, function to call,
+--how many times to call(-1 means forever))
+timer.performWithDelay(1, update, -1)
+
+
 
 	physics.addBody(healthSprite)
 
-	local function move(event)
-		background.x = background.x - scrollSpeed
-		background2.x = background2.x - scrollSpeed
-		bg.x = bg.x - scrollSpeed
-		bg2.x = bg2.x - scrollSpeed
 
-		if(background.x + background.contentHeight) < 0 then
-			background:translate( 3200, 0 )
-			end
-		if(background2.x + background2.contentHeight) < 0 then
-			background2:translate( 4000, 0 )
-			end 
-		if(bg.x + bg.contentHeight) < 0 then
-			bg:translate( 20, 0 )
-			end	
-		if(bg2.x + bg2.contentHeight) < 0 then
-			bg2:translate( 20, 0 )
-			end	
-	end
-	Runtime:addEventListener( "enterFrame", move )
 	
 	-- all display objects must be inserted into group
 	
-	sceneGroup:insert( background )
+	
 
-
-	sceneGroup:insert(background2)
-	sceneGroup:insert( bg )
-	sceneGroup:insert(bg2)
 
 	sceneGroup:insert(upButton)
 	sceneGroup:insert(downButton)
