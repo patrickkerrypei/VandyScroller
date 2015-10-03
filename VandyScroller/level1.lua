@@ -61,7 +61,6 @@ function scene:create( event )
 
 
 	healthSprite:play()
-	healthSprite:applyLinearImpulse(10, 0)
 	
 
 	-- create a grey rectangle as the backdrop
