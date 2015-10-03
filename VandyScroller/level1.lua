@@ -325,12 +325,33 @@ end
 --actual function or it will not be able to find it
 --timer.performWithDelay(how often it will run in milliseconds, function to call,
 --how many times to call(-1 means forever))
+<<<<<<< HEAD
 timer.performWithDelay(1, update, -1)
+=======
+<<<<<<< HEAD
+timer.performWithDelay(1, update,  100)
 
+local hero = display.newSprite(spriteSheet, sequenceData);
+x = display.contentWidth/2;
+y = display.contentHeight/2;
+right = true;
+hero.x = x;
+hero.y = y;
+
+--Then, instead of using the prepare method, we use setSequence
+hero:setSequence("running");
+physics.addBody(hero)
+hero:play();
+=======
+timer.performWithDelay(1, update, 100)
+>>>>>>> origin/master
+
+>>>>>>> origin/master
 
 --the rest of the code remains the same
-function update()
+function updateHero()
 
+<<<<<<< HEAD
 if (right) then
 hero.x = hero.x+1;
 else
@@ -344,17 +365,41 @@ if (hero.x < 0) then
 right = true;
 hero.xScale = 1;
 end
+=======
+	if (right) then
+	hero.x = hero.x + 1;
+	else
+	hero.x = hero.x - 1;
+	end
+	if (hero.x > 480) then
+	right = false;
+	hero.xScale = -1;
+	end
+	if (hero.x < 0) then
+	right = true;
+	hero.xScale = 1;
+	end
+>>>>>>> origin/master
 end
 
+<<<<<<< HEAD
+timer.performWithDelay(1, updateHero, 100);
+	
+=======
 timer.performWithDelay(1, update, -1);
 
 
+>>>>>>> origin/master
 	-- all display objects must be inserted into group
 
 	sceneGroup:insert(backgroundnear1)
 	sceneGroup:insert(backgroundfar)
 	sceneGroup:insert(backgroundnear2)
 	sceneGroup:insert(hero)
+<<<<<<< HEAD
+end
+
+=======
 	sceneGroup:insert(upButton)
 	sceneGroup:insert(downButton)
 	sceneGroup:insert(leftButton)
@@ -387,6 +432,7 @@ end
 
 
 
+>>>>>>> origin/master
 function scene:show( event )
 	local sceneGroup = self.view
 	local phase = event.phase
