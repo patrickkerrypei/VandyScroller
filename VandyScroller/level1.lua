@@ -45,6 +45,25 @@ physics.setGravity(0,6)
 -- forward declarations and other locals
 local screenW, screenH, halfW = display.contentWidth, display.contentHeight, display.contentWidth*0.5
 
+local imgsheetSetup= 
+{
+width = 100,
+height = 100,
+numFrames = 3
+}
+
+local spriteSheet = graphics.newImageSheet("monsterSpriteSheet.png", imgsheetSetup);
+
+--Now we create a table that holds the sequence data for our animations
+
+local sequenceData = 
+{
+{ name = "running", start = 1, count = 6, time = 600, loopCount = 0},
+{ name = "jumping", start = 7, count = 7, time = 1, loopCount = 1 }
+}
+
+--And assign it to the object hero using the display.newSprite function
+
 
 
 -- Implementation for BUTTONS
@@ -84,6 +103,8 @@ local function stop (event)
 end
 
 Runtime:addEventListener("touch",stop)
+
+
 
 
 
@@ -162,18 +183,19 @@ for a = 1, 8, 1 do
 	--textures as you want. The more you have the more random it will be, just remember to
 	--up the number in math.random(x) to however many textures you have.
 	numGen = math.random(2)
-	local newBlock
+
 	local blockShape = { -halfW,-34, halfW,-34, halfW,34, -halfW,34 }
+	
 	print (numGen)
 	if(numGen == 1 and isDone == false) then
 		newBlock = display.newImage("rocks.jpg")
-		physics.addBody( newBlock, "static", { friction=0.3, shape=blockShape } )
+		
 		isDone = true
 	end
 
 	if(numGen == 2 and isDone == false) then
 		newBlock = display.newImage("rocks.jpg")
-		physics.addBody( newBlock, "static", { friction=0.3, shape=blockShape } )
+
 		isDone = true
 	end
 
@@ -191,7 +213,7 @@ for a = 1, 8, 1 do
 	blocks:insert(newBlock)
 end
 
-
+local bgShape = { -halfW,-34, halfW,-34, halfW,34, -halfW,34 }
 --the update function will control most everything that happens in our game
 --this will be called every frame(30 frames per second in our case, which is the Corona SDK default)
 local function update( event )
@@ -205,8 +227,10 @@ end
 
 function updateBlocks()
 	for a = 1, blocks.numChildren, 1 do
+	
 		if(a > 1) then
 			newX = (blocks[a - 1]).x + 79
+
 		else
 			newX = (blocks[8]).x + 79 - speed
 		end
@@ -240,17 +264,38 @@ end
 --timer.performWithDelay(how often it will run in milliseconds, function to call,
 --how many times to call(-1 means forever))
 timer.performWithDelay(1, update, -1)
-local healthSheet = graphics.newImageSheet("health_bar.png", options)
-local healthSprite = display.newSprite( healthSheet, sequences_healthSheet)
+local hero = display.newSprite(spriteSheet, sequenceData);
+
 x = display.contentWidth/2;
 y = display.contentHeight/2;
-healthSprite.x = x;
-healthSprite.y = y;
-healthSprite:setSequence("health0")
-physics.addBody(healthSprite)
-healthSprite:play()
+right = true;
+hero.x = x;
+hero.y = y;
 
+--Then, instead of using the prepare method, we use setSequence
+hero:setSequence("running");
+physics.addBody(hero)
+hero:play();
 
+--the rest of the code remains the same
+function update()
+
+if (right) then
+hero.x = hero.x + 1;
+else
+hero.x = hero.x - 1;
+end
+if (hero.x > 480) then
+right = false;
+hero.xScale = -1;
+end
+if (hero.x < 0) then
+right = true;
+hero.xScale = 1;
+end
+end
+
+timer.performWithDelay(1, update, -1);
 
 
 
@@ -258,11 +303,15 @@ healthSprite:play()
 	
 	-- all display objects must be inserted into group
 	
-	sceneGroup:insert(healthSprite)
 	sceneGroup:insert(upButton)
 	sceneGroup:insert(downButton)
 	sceneGroup:insert(leftButton)
 	sceneGroup:insert(rightButton)
+	sceneGroup:insert(backgroundnear2)
+	sceneGroup:insert(backgroundnear1)
+	sceneGroup:insert(backbackground)
+	sceneGroup:insert(backgroundfar)
+	sceneGroup:insert(hero)
 
 
 end
