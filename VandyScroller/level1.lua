@@ -44,11 +44,6 @@ physics.start(); physics.pause()
 -- forward declarations and other locals
 local screenW, screenH, halfW = display.contentWidth, display.contentHeight, display.contentWidth*0.5
 
-local background = display.newRect( 0, 0, screenW, screenH )
-background.anchorX = 0
-background.anchorY = 0
-background:setFillColor( .5 )
-
 local healthSheet = graphics.newImageSheet("health_bar.png", options)
 local healthSprite = display.newSprite( healthSheet, sequences_healthSheet)
 healthSprite.x = display.contentWidth * .5
