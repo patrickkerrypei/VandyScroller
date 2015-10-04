@@ -42,40 +42,52 @@ local sequenceData =
 --And assign it to the object hero using the display.newSprite function
 local hero = display.newSprite(spriteSheet, sequenceData);
 
+
 x = display.contentWidth/2;
 y = display.contentHeight/2;
 right = true;
 hero.x = x;
 hero.y = y;
+hero.accel = 0
+hero. gravity = -6
+local astro = { density=1.0, friction=0.3, bounce=0.2 }
+astro.bodyType= "dynamic"
+
+physics.addBody( hero, astro )
 
 hero:setSequence("running");
-physics.addBody(hero)
+
 hero:play();
+<<<<<<< HEAD
+=======
+--rectangle used for our collision detection
+--it will always be in front of the hero sprite
+--that way we know if the hero hit into anything
+local collisionRect = display.newRect(hero.x + 36, hero.y, 1, 70)
+collisionRect.strokeWidth = 1
+collisionRect:setFillColor(140, 140, 140)
+collisionRect:setStrokeColor(180, 180, 180)
+collisionRect.alpha = 0
+>>>>>>> origin/master
 
 -- Implementation for BUTTONS
 local upButton;
 upButton = display.newImage("up.png")
 upButton:scale(0.5,0.5)
-upButton.x = display.contentWidth * .175
-upButton.y = display.contentHeight * .8 -25
-
-local downButton;
-downButton = display.newImage("down.png")
-downButton:scale(0.5,0.5)
-downButton.x = display.contentWidth * .175
-downButton.y = display.contentHeight * .9 -25
+upButton.x = display.contentWidth * .105
+upButton.y = display.contentHeight * .55
 
 local leftButton;
 leftButton = display.newImage("left.png")
 leftButton:scale(0.5,0.5)
-leftButton.x = display.contentWidth * .1
-leftButton.y = display.contentHeight * .9 -25
+leftButton.x = display.contentWidth * .03
+leftButton.y = display.contentHeight * .55
 
 local rightButton;
 rightButton = display.newImage("right.png")
 rightButton:scale(0.5,0.5)
-rightButton.x = display.contentWidth * .25
-rightButton.y = display.contentHeight * .9 -25
+rightButton.x = display.contentWidth * .18
+rightButton.y = display.contentHeight * .55
 
 hero.x = 0
 hero.y = 0
@@ -92,13 +104,9 @@ Runtime:addEventListener("touch",stop)
 
 function upButton:tap()
 	hero.y = hero.y -50
+	hero.x = hero.x + 20
 end
 upButton:addEventListener("tap",upButton)
-
-function downButton:touch()
-	hero.y = hero.y + speed
-end
-downButton:addEventListener("touch",downButton)
 
 function leftButton:touch()
 	hero.x = hero.x -speed
@@ -144,8 +152,43 @@ function scene:create( event )
 	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 
 	local sceneGroup = self.view
+<<<<<<< HEAD
 
 	createWalls()
+=======
+
+
+
+
+	local function createWalls()
+
+	local wallThickness = 5
+
+	--top
+	wall = display.newRect(0, 0, display.contentWidth * 5, wallThickness-1)
+	wall:setFillColor(0,0,0)
+	physics.addBody(wall, "static", {friction = 0, bounce = 0})
+
+	--bottom
+	wall = display.newRect(0, display.contentHeight - wallThickness, display.contentWidth, wallThickness)
+	wall:setFillColor(0,0,0)
+	physics.addBody(wall, "static", {friction = 0, bounce = 0})
+
+	--left
+	local wall = display.newRect( -44, 0, wallThickness, display.contentHeight * 10)
+	wall:setFillColor(0,0,0)
+	physics.addBody(wall, "static", {friction = 0, bounce = 0})
+
+	--right
+	wall = display.newRect(display.contentWidth - wallThickness + 49, 0, wallThickness, display.contentHeight*5)
+	wall:setFillColor(0,0,0)
+	physics.addBody(wall, "static", {friction = 0, bounce = 0})
+end
+
+createWalls()
+
+	--adds an image to our game centered at x and y coordinates
+>>>>>>> origin/master
 
 	local backgroundfar = display.newImage("bgfar1.png")
 	backgroundfar.x = 480
@@ -161,12 +204,55 @@ function scene:create( event )
 
 	--create a new group to hold all of our blocks
 	local blocks = display.newGroup()
+	local ghosts = display.newGroup()
+	local spikes = display.newGroup()
+	
+	for a = 1, 3, 1 do
+    ghost = display.newImage("ghost.png")
+    ghost.name = ("ghost" .. a)
+    ghost.id = a
+    ghost.x = 800
+    ghost.y = 600
+    ghost.speed = 0
+    --variable used to determine if they are in play or not
+    ghost.isAlive = false
+    --make the ghosts transparent and more... ghostlike!
+    ghost.alpha = .5
+    ghosts:insert(ghost)
+end
+
+--create spikes
+for a = 1, 3, 1 do
+    spike = display.newImage("spikeBlock.png")
+    spike.name = ("spike" .. a)
+    spike.id = a
+    spike.x = 900
+    spike.y = 500
+    spike.isAlive = false
+    spikes:insert(spike)
+end
+
+local blasts = display.newGroup()
+--create blasts
+for a=1, 5, 1 do
+    blast = display.newImage("blast.png")
+    blast.name = ("blast" .. a)
+    blast.id = a
+    blast.x = 800
+    blast.y = 500
+    blast.isAlive = false
+    blasts:insert(blast)
+	end
+	
+
 
 	--setup some variables that we will use to position the ground
 	local groundMin = 420
 	local groundMax = 340
 	local groundLevel = groundMin
 	local speed = 3;
+	local inEvent = 0
+	local eventRun = 0
 
 	--this for loop will generate all of your ground pieces, we are going to
 	--make 8 in all.
@@ -198,36 +284,306 @@ function scene:create( event )
 	--because a is a variable that is being changed each run we can assign
 	--values to the block based on a. In this case we want the x position to
 	--be positioned the width of a block apart.
-	newBlock.x = (a * 79) - 79
+	newBlock.x = (a * 80) - 80
 	newBlock.y = groundLevel
 	blocks:insert(newBlock)
 end
 
-local bgShape = { -halfW,-34, halfW,-34, halfW,34, -halfW,34 }
+
 --the update function will control most everything that happens in our game
 --this will be called every frame(30 frames per second in our case, which is the Corona SDK default)
 local function update( event )
 	--updateBackgrounds will call a function made specifically to handle the background movement
 	updateBackgrounds()
 	updateBlocks()
+	updateBlasts()
+	updateSpikes()
+	updateGhosts()
+	checkCollisions()
 	speed = speed
 
 end
 
+<<<<<<< HEAD
 function updateBlocks()
+=======
+function checkCollisions()
+        --boolean variable so we know if we were on the ground in the last frame
+	wasOnGround = onGround
+
+>>>>>>> origin/master
 	for a = 1, blocks.numChildren, 1 do
-	
-		if(a > 1) then
-			newX = (blocks[a - 1]).x + 79
-
-		else
-			newX = (blocks[8]).x + 79 - speed
+		if(collisionRect.y - 10> blocks[a].y - 170 and blocks[a].x - 40 < collisionRect.x and blocks[a].x + 40 > collisionRect.x) then
+			--stop the hero
+			speed = 0
 		end
+	end
+	
+	--stop the game if the hero runs into a spike wall
+	for a = 1, spikes.numChildren, 1 do
+		if(spikes[a].isAlive == true) then
+			if(collisionRect.y - 10> spikes[a].y - 170 and spikes[a].x - 40 < collisionRect.x and spikes[a].x + 40 > collisionRect.x) then
+				--stop the hero
+				speed = 0
+			end
+		end
+	end
+	
+	--make sure the player didn't get hit by a ghost!
+	for a = 1, ghosts.numChildren, 1 do
+		if(ghosts[a].isAlive == true) then
+			if(((  ((hero.y-ghosts[a].y))<70) and ((hero.y - ghosts[a].y) > -70)) and (ghosts[a].x - 40 < collisionRect.x and ghosts[a].x + 40 > collisionRect.x)) then
+				--stop the hero
+				speed = 0
+			end
+		end
+	end
 
-		if((blocks[a]).x < -40) then
-			(blocks[a]).x, (blocks[a]).y = newX, (blocks[a]).y
+	for a = 1, blocks.numChildren, 1 do
+		if(hero.y >= blocks[a].y - 170 and blocks[a].x < hero.x + 60 and blocks[a].x > hero.x - 60) then
+			hero.y = blocks[a].y - 171
+			onGround = true
+			break
 		else
-			(blocks[a]):translate(speed * -1, 0)
+			onGround = false
+		end
+	end
+end
+
+--update the ghosts if they are alive
+function updateGhosts()
+	for a = 1, ghosts.numChildren, 1 do
+		if(ghosts[a].isAlive == true) then
+			(ghosts[a]):translate(speed * -1, 0)
+			if(ghosts[a].y > hero.y) then
+				ghosts[a].y = ghosts[a].y - 1
+			end
+			if(ghosts[a].y < hero.y) then
+				ghosts[a].y = ghosts[a].y + 1
+			end
+			if(ghosts[a].x < -80) then
+				ghosts[a].x = 800
+				ghosts[a].y = 600
+				ghosts[a].speed = 0
+				ghosts[a].isAlive = false;
+			end
+		end
+    end
+end
+
+--check to see if the spikes are alive or not, if they are
+--then update them appropriately
+function updateSpikes()
+    for a = 1, spikes.numChildren, 1 do
+        if(spikes[a].isAlive == true) then
+            (spikes[a]):translate(speed * -1, 0)
+            if(spikes[a].x < -80) then
+                spikes[a].x = 900
+                spikes[a].y = 500
+                spikes[a].isAlive = false
+            end
+        end
+    end
+end
+
+function updateBlasts()
+        --for each blast that we instantiated check to see what it is doing
+    for a = 1, blasts.numChildren, 1 do
+                --if that blast is not in play we don't need to check anything else
+        if(blasts[a].isAlive == true) then
+            (blasts[a]):translate(5, 0)
+                        --if the blast has moved off of the screen, then kill it and return it to its original place
+            if(blasts[a].x > 550) then
+                    blasts[a].x = 800
+                blasts[a].y = 500
+                blasts[a].isAlive = false
+            end
+        end
+                --check for collisions between the blasts and the spikes
+        for b = 1, spikes.numChildren, 1 do
+            if(spikes[b].isAlive == true) then
+                if(blasts[a].y - 25 > spikes[b].y - 120 and blasts[a].y + 25 < spikes[b].y + 120 and spikes[b].x - 40 < blasts[a].x + 25 and spikes[b].x + 40 > blasts[a].x - 25) then
+					blasts[a].x = 800
+					blasts[a].y = 500
+					blasts[a].isAlive = false
+					spikes[b].x = 900
+					spikes[b].y = 500
+					spikes[b].isAlive = false
+                end
+            end
+        end
+ 
+		--check for collisions between the blasts and the ghosts
+		for b = 1, ghosts.numChildren, 1 do
+			if(ghosts[b].isAlive == true) then
+				if(blasts[a].y - 25 > ghosts[b].y - 120 and blasts[a].y + 25 < ghosts[b].y + 120 and ghosts[b].x - 40 < blasts[a].x + 25 and ghosts[b].x + 40 > blasts[a].x - 25) then
+					blasts[a].x = 800
+					blasts[a].y = 500
+					blasts[a].isAlive = false
+					ghosts[b].x = 800
+					ghosts[b].y = 600
+					ghosts[b].isAlive = false
+					ghosts[b].speed = 0
+				end
+            end
+        end
+    end
+end
+
+function touched( event )
+    if(event.phase == "began") then
+        if(event.x < 241) then
+            if(onGround) then
+                hero.x = hero.x + 20
+            end
+        else
+            for a=1, blasts.numChildren, 1 do
+                if(blasts[a].isAlive == false) then
+                    blasts[a].isAlive = true
+                    blasts[a].x = hero.x + 50
+                    blasts[a].y = hero.y
+                    break
+                end
+            end
+        end
+    end
+end
+
+function updateBlocks()
+     for a = 1, blocks.numChildren, 1 do
+          if(a > 1) then
+               newX = (blocks[a - 1]).x + 79
+          else
+               newX = (blocks[8]).x + 79 - speed
+          end
+          if((blocks[a]).x < -40) then
+			 if(inEvent == 11) then
+				  (blocks[a]).x, (blocks[a]).y = newX, 600
+			 else
+				  (blocks[a]).x, (blocks[a]).y = newX, groundLevel
+			 end
+			--by setting up the spikes this way we are guaranteed to
+			--only have 3 spikes out at most at a time.
+			if(inEvent == 12) then
+				for a=1, spikes.numChildren, 1 do
+					if(spikes[a].isAlive == true) then
+					--do nothing
+					else
+					spikes[a].isAlive = true
+					spikes[a].y = groundLevel - 200
+					spikes[a].x = newX
+					break
+					end
+				end
+			end
+			 checkEvent()
+			else
+				 (blocks[a]):translate(speed * -1, 0)
+			end
+		 end
+end
+
+function updatehero()
+	--if our hero is jumping then switch to the jumping animation
+	--if not keep playing the running animation
+	if(onGround) then
+		if(wasOnGround) then
+
+		else
+			hero:prepare("running")
+			hero:play()
+		end
+	else
+		hero:prepare("jumping")
+		hero:play()
+	end
+
+	if(hero.accel > 0) then
+		hero.accel = hero.accel - 1
+	end
+
+	--update the heros position, accel is used for our jump and
+	--gravity keeps the hero coming down. You can play with those 2 variables
+	--to make lots of interesting combinations of gameplay like 'low gravity' situations
+	hero.y = hero.y - hero.accel
+	hero.y = hero.y - hero.gravity
+
+	--update the collisionRect to stay in front of the hero
+	collisionRect.y = hero.y
+end
+
+function checkEvent()
+     --first check to see if we are already in an event, we only want 1 event going on at a time
+     if(eventRun > 0) then
+          eventRun = eventRun - 1
+          if(eventRun == 0) then
+               inEvent = 0
+          end
+     end
+     --if we are in an event then do nothing
+     if(inEvent > 0 and eventRun > 0) then
+          --Do nothing
+     else
+          check = math.random(100)
+          if(check > 80 and check < 99) then
+               inEvent = math.random(10)
+               eventRun = 1
+          end
+		  
+		  if(check > 98) then
+				 inEvent = 11
+				 eventRun = 2
+			end			
+			--the more frequently you want events to happen then
+			--greater you should make the checks
+			if(check > 72 and check < 81) then
+					inEvent = 12
+					eventRun = 1
+			end
+			
+			--ghost event
+			if(check > 60 and check < 73) then
+					inEvent = 13
+					eventRun = 1
+			end
+     end
+     --if we are in an event call runEvent to figure out if anything special needs to be done
+     if(inEvent > 0) then
+          runEvent()
+     end
+end
+--this function is pretty simple it just checks to see what event should be happening, then
+--updates the appropriate items. Notice that we check to make sure the ground is within a
+--certain range, we don't want the ground to spawn above or below whats visible on the screen.
+function runEvent()
+     if(inEvent < 6) then
+          groundLevel = groundLevel + 40
+     end
+     if(inEvent > 5 and inEvent < 11) then
+          groundLevel = groundLevel - 40
+     end
+     if(groundLevel < groundMax) then
+          groundLevel = groundMax
+     end
+     if(groundLevel > groundMin) then
+          groundLevel = groundMin
+     end
+	 
+	--this will be a little bit different as we want this to really
+	--make the game feel even more random. change where the ghosts
+	--spawn and how fast they come at the hero.
+	--this will be a little bit different as we want this to really
+	--make the game feel even more random. change where the ghosts
+	--spawn and how fast they come at the hero.
+if(inEvent == 13) then
+	for a=1, ghosts.numChildren, 1 do
+		if(ghosts[a].isAlive == false) then
+			ghosts[a].isAlive = true
+			ghosts[a].x = 500
+			ghosts[a].y = math.random(-50, 400)
+			ghosts[a].speed = math.random(2,4)
+			break
+			end
 		end
 	end
 end
@@ -253,14 +609,21 @@ end
 --timer.performWithDelay(how often it will run in milliseconds, function to call,
 --how many times to call(-1 means forever))
 timer.performWithDelay(1, update, -1)
+Runtime:addEventListener("touch", touched, -1)
 
 --the rest of the code remains the same
 function update()
 
 if (right) then
+<<<<<<< HEAD
 hero.x = hero.x + 0;
 else
 hero.x = hero.x - 0;
+=======
+hero.x = hero.x+1
+else
+hero.x = hero.x+1
+>>>>>>> origin/master
 end
 if (hero.x > 480) then
 right = false;
@@ -273,6 +636,7 @@ end
 end
 
 
+<<<<<<< HEAD
 sceneGroup:insert(backgroundnear2)
 sceneGroup:insert(backgroundnear1)
 sceneGroup:insert(backgroundfar)
@@ -281,6 +645,22 @@ sceneGroup:insert(upButton)
 sceneGroup:insert(downButton)
 sceneGroup:insert(leftButton)
 sceneGroup:insert(rightButton)
+=======
+	-- all display objects must be inserted into group
+	
+
+	sceneGroup:insert(backgroundnear2)
+	sceneGroup:insert(backgroundnear1)
+	sceneGroup:insert(backgroundfar)
+	sceneGroup:insert(spikes)
+	sceneGroup:insert(blasts)
+	sceneGroup:insert(ghosts)
+	sceneGroup:insert(hero)
+	sceneGroup:insert(upButton)
+	sceneGroup:insert(leftButton)
+	sceneGroup:insert(rightButton)
+	sceneGroup:insert(collisionRect)
+>>>>>>> origin/master
 	
 end
 
@@ -288,6 +668,8 @@ function scene:show( event )
 	local sceneGroup = self.view
 	local phase = event.phase
 	
+	
+
 	if phase == "will" then
 		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then
