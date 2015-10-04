@@ -12,32 +12,9 @@ local options = {
 	numFrames = 2
 }
 
-local sequenceData = {
-    { name = "health0", start=1, count=1, time=0,   loopCount=1 },
-    { name = "health1", start=1, count=2, time=100, loopCount=1 },
-    { name = "health2", start=1, count=3, time=200, loopCount=1 },
-    { name = "health3", start=1, count=4, time=300, loopCount=1 },
-    { name = "health4", start=1, count=5, time=400, loopCount=1 },
-    { name = "health5", start=1, count=6, time=500, loopCount=1 }
-	}
-
--- sequences table
-local sequences_healthSheet = {
-    -- consecutive frames sequence
-    {
-        name = "healthSprite",
-        start = 1,
-        count = 5,
-        time = 800,
-        loopCount = 0,
-        loopDirection = "forward"
-    }
-}
-
-
 -- include Corona's "physics" library
 local physics = require "physics"
-physics.start(); physics.pause()
+physics.start(); physics.pause() 
 physics.setGravity(0,6)
 
 --------------------------------------------
@@ -74,6 +51,7 @@ hero.y = y;
 hero:setSequence("running");
 physics.addBody(hero)
 hero:play();
+
 -- Implementation for BUTTONS
 local upButton;
 upButton = display.newImage("up.png")
@@ -102,7 +80,6 @@ rightButton.y = display.contentHeight * .9 -25
 hero.x = 0
 hero.y = 0
 local speed = 10
-
 
 local function stop (event)
 	if event.phase == "ended" then
@@ -133,6 +110,31 @@ function rightButton:touch()
 end
 rightButton:addEventListener("touch",rightButton)
 
+-- WALLS
+local function createWalls()
+
+	local wallThickness = 5
+
+	--top
+	wall = display.newRect(0, 0, display.contentWidth * 5, wallThickness-1)
+	wall:setFillColor(0,0,0)
+	physics.addBody(wall, "static", {friction = 0, bounce = 0})
+
+	--bottom
+	wall = display.newRect(0, display.contentHeight - wallThickness, display.contentWidth, wallThickness)
+	wall:setFillColor(0,0,0)
+	physics.addBody(wall, "static", {friction = 0, bounce = 0})
+
+	--left
+	local wall = display.newRect( -44, 0, wallThickness, display.contentHeight * 10)
+	wall:setFillColor(0,0,0)
+	physics.addBody(wall, "static", {friction = 0, bounce = 0})
+
+	--right
+	wall = display.newRect(display.contentWidth - wallThickness + 49, 0, wallThickness, display.contentHeight*5)
+	wall:setFillColor(0,0,0)
+	physics.addBody(wall, "static", {friction = 0, bounce = 0})
+end
 
 function scene:create( event )
 
@@ -142,12 +144,9 @@ function scene:create( event )
 	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 
 	local sceneGroup = self.view
-	
-	--takes away the display bar at the top of the screen
-	display.setStatusBar(display.HiddenStatusBar)
 
-	--adds an image to our game centered at x and y coordinates
- 
+	createWalls()
+
 	local backgroundfar = display.newImage("bgfar1.png")
 	backgroundfar.x = 480
 	backgroundfar.y = 160
@@ -174,13 +173,7 @@ function scene:create( event )
 	for a = 1, 8, 1 do
 		isDone = false
 
-	--get a random number between 1 and 2, this is what we will use to decide which
-	--texture to use for our ground sprites. Doing this will give us random ground
-	--pieces so it seems like the ground goes on forever. You can have as many different
-	--textures as you want. The more you have the more random it will be, just remember to
-	--up the number in math.random(x) to however many textures you have.
 	numGen = math.random(2)
-
 	local blockShape = { -halfW,-34, halfW,-34, halfW,34, -halfW,34 }
 	
 	print (numGen)
@@ -220,8 +213,6 @@ local function update( event )
 	speed = speed
 
 end
-
-
 
 function updateBlocks()
 	for a = 1, blocks.numChildren, 1 do
@@ -263,14 +254,13 @@ end
 --how many times to call(-1 means forever))
 timer.performWithDelay(1, update, -1)
 
-
 --the rest of the code remains the same
 function update()
 
 if (right) then
-hero.x = hero.x + 1;
+hero.x = hero.x + 0;
 else
-hero.x = hero.x - 1;
+hero.x = hero.x - 0;
 end
 if (hero.x > 480) then
 right = false;
@@ -282,23 +272,17 @@ hero.xScale = 1;
 end
 end
 
-timer.performWithDelay(1, update, -1);
 
-
-	-- all display objects must be inserted into group
-	
-
-	sceneGroup:insert(backgroundnear2)
-	sceneGroup:insert(backgroundnear1)
-	sceneGroup:insert(backgroundfar)
-	sceneGroup:insert(hero)
-	sceneGroup:insert(upButton)
-	sceneGroup:insert(downButton)
-	sceneGroup:insert(leftButton)
-	sceneGroup:insert(rightButton)
+sceneGroup:insert(backgroundnear2)
+sceneGroup:insert(backgroundnear1)
+sceneGroup:insert(backgroundfar)
+sceneGroup:insert(hero)
+sceneGroup:insert(upButton)
+sceneGroup:insert(downButton)
+sceneGroup:insert(leftButton)
+sceneGroup:insert(rightButton)
 	
 end
-
 
 function scene:show( event )
 	local sceneGroup = self.view
