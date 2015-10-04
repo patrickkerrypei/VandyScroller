@@ -143,9 +143,6 @@ function scene:create( event )
 	display.setStatusBar(display.HiddenStatusBar)
 
 	--adds an image to our game centered at x and y coordinates
-	local backbackground = display.newImage("background.jpg")
-	backbackground.x = 240
-	backbackground.y = 160
 
 	local backgroundfar = display.newImage("bgfar1.png")
 	backgroundfar.x = 480
@@ -260,7 +257,7 @@ end
 --actual function or it will not be able to find it
 --timer.performWithDelay(how often it will run in milliseconds, function to call,
 --how many times to call(-1 means forever))
-timer.performWithDelay(1, update, 100)
+timer.performWithDelay(1, update, -1)
 
 
 --the rest of the code remains the same
@@ -289,7 +286,7 @@ timer.performWithDelay(1, update, -1);
 
 	sceneGroup:insert(backgroundnear2)
 	sceneGroup:insert(backgroundnear1)
-	sceneGroup:insert(backbackground)
+	
 	sceneGroup:insert(backgroundfar)
 	sceneGroup:insert(hero)
 	sceneGroup:insert(upButton)
