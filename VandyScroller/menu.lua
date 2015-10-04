@@ -23,7 +23,7 @@ function scene:create( event )
 	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 
 	-- display a background image
-	local background = display.newImageRect( "splash_screen.png", display.contentWidth, display.contentHeight )
+	local background = display.newImageRect( "MenuBackground.png", display.contentWidth, display.contentHeight )
 	background.anchorX = 0
 	background.anchorY = 0
 	background.x, background.y = 0, 0
