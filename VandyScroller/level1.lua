@@ -69,8 +69,8 @@ local hero = display.newSprite(spriteSheet, sequenceData);
 x = display.contentWidth/2;
 y = display.contentHeight/2;
 right = true;
-hero.x = x;
-hero.y = y;
+hero.x = 50;
+hero.y = 50;
 hero.accel = 0
 hero. gravity = -6
 local astro = { density=1.0, friction=0.3, bounce=0.2 }
@@ -94,20 +94,14 @@ collisionRect.alpha = 0
 local upButton;
 upButton = display.newImage("up.png")
 upButton:scale(0.5,0.5)
-upButton.x = display.contentWidth * .105
-upButton.y = display.contentHeight * .55
-
-local leftButton;
-leftButton = display.newImage("left.png")
-leftButton:scale(0.5,0.5)
-leftButton.x = display.contentWidth * .03
-leftButton.y = display.contentHeight * .55
+upButton.x = display.contentWidth * .025
+upButton.y = display.contentHeight * .2
 
 local rightButton;
-rightButton = display.newImage("right.png")
+rightButton = display.newImage("shoot.png")
 rightButton:scale(0.5,0.5)
-rightButton.x = display.contentWidth * .18
-rightButton.y = display.contentHeight * .55
+rightButton.x = display.contentWidth * .10
+rightButton.y = display.contentHeight * .2 
 
 hero.x = 0
 hero.y = 0
@@ -123,21 +117,13 @@ local function stop (event)
 end
 Runtime:addEventListener("touch",stop)
 
-function upButton:tap()
-	hero.y = hero.y -50
-	hero.x = hero.x + 20
+function upButton:touch()
+	hero.y = hero.y -10
+	hero.x = hero.x 
 end
-upButton:addEventListener("tap",upButton)
+upButton:addEventListener("touch",upButton)
 
-function leftButton:touch()
-	hero.x = hero.x -speed
-end
-leftButton:addEventListener("touch",leftButton)
-
-function rightButton:touch()
-	hero.x = hero.x + speed
-end
-rightButton:addEventListener("touch",rightButton)
+rightButton:addEventListener("tap",rightButton)
 
 local function createWalls()
 
@@ -215,7 +201,7 @@ for a = 1, 3, 1 do
     spike = display.newImage("spikeBlock.png")
     spike.name = ("spike" .. a)
     spike.id = a
-    spike.x = 1
+    spike.x = 100
     spike.y = 500
     spike.isAlive = false
     spikes:insert(spike)
@@ -421,14 +407,9 @@ function updateBlasts()
     end
 end
 
-function touched( event )
-    if(event.phase == "began") then
-        if(event.x < 241) then
-            if(onGround) then
-                hero.x = hero.x + 20
-            end
-        else
-            for a=1, blasts.numChildren, 1 do
+
+function rightButton:tap()
+	for a=1, blasts.numChildren, 1 do
                 if(blasts[a].isAlive == false) then
                     blasts[a].isAlive = true
                     blasts[a].x = hero.x + 50
@@ -436,8 +417,6 @@ function touched( event )
                     break
                 end
             end
-        end
-    end
 end
 
 function updateBlocks()
@@ -600,7 +579,6 @@ end
 --timer.performWithDelay(how often it will run in milliseconds, function to call,
 --how many times to call(-1 means forever))
 timer.performWithDelay(1, update, -1)
-Runtime:addEventListener("touch", touched, -1)
 
 
 --the rest of the code remains the same
@@ -635,7 +613,6 @@ timer.performWithDelay(1, update, -1);
 	sceneGroup:insert(ghosts)
 	sceneGroup:insert(hero)
 	sceneGroup:insert(upButton)
-	sceneGroup:insert(leftButton)
 	sceneGroup:insert(rightButton)
 	sceneGroup:insert(collisionRect)
 	
