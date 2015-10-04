@@ -253,10 +253,10 @@ function checkCollisions()
 		end
 	end
 	
-	--stop the game if the hero runs into an alien
+	--make sure the player didn't get hit by a meteor!
 	for a = 1, aliens.numChildren, 1 do
 		if(aliens[a].isAlive == true) then
-			if(collisionRect.y - 10> aliens[a].y - 170 and aliens[a].x - 40 < collisionRect.x and aliens[a].x + 40 > collisionRect.x) then
+			if(((  ((hero.y-aliens[a].y))<70) and ((hero.y - aliens[a].y) > -70)) and (aliens[a].x - 40 < collisionRect.x and aliens[a].x + 40 > collisionRect.x)) then
 				--stop the hero
 				speed = 0
 			end
@@ -341,9 +341,9 @@ function updateBlasts()
 					blasts[a].x = 800
 					blasts[a].y = 500
 					blasts[a].isAlive = false
-					aliens[b].x = 90
-					aliens[b].y = 50
-					aliens[b].isAlive = false
+					aliens[b].x = 900
+					aliens[b].y = 500
+					aliens[b].isAlive = true
                 end
             end
         end
@@ -378,8 +378,8 @@ function updateBlocks()
 			 else
 				  (blocks[a]).x, (blocks[a]).y = newX, groundLevel
 			 end
-			--by setting up the aliens this way we are guaranteed to
-			--only have 3 aliens out at most at a time.
+			--by setting up the spikes this way we are guaranteed to
+			--only have 3 spikes out at most at a time.
 			if(inEvent == 12) then
 				for a=1, aliens.numChildren, 1 do
 					if(aliens[a].isAlive == true) then
@@ -392,9 +392,6 @@ function updateBlocks()
 					end
 				end
 			end
-		
-
-
 			 checkEvent()
 			else
 				 (blocks[a]):translate(speed * -1, 0)
@@ -428,7 +425,7 @@ function updatehero()
 	hero.y = hero.y - hero.gravity
 
 	--update the collisionRect to stay in front of the hero
-	collisionRect.y = hero.y
+	collisionRect.y = hero.y +5
 end
 
 function checkEvent()
