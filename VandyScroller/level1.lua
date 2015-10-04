@@ -253,7 +253,7 @@ function checkCollisions()
 		end
 	end
 	
-	--stop the game if the hero runs into a alien wall
+	--stop the game if the hero runs into an alien
 	for a = 1, aliens.numChildren, 1 do
 		if(aliens[a].isAlive == true) then
 			if(collisionRect.y - 10> aliens[a].y - 170 and aliens[a].x - 40 < collisionRect.x and aliens[a].x + 40 > collisionRect.x) then
@@ -341,8 +341,8 @@ function updateBlasts()
 					blasts[a].x = 800
 					blasts[a].y = 500
 					blasts[a].isAlive = false
-					aliens[b].x = 900
-					aliens[b].y = 500
+					aliens[b].x = 90
+					aliens[b].y = 50
 					aliens[b].isAlive = false
                 end
             end
