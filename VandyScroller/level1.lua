@@ -75,22 +75,26 @@ hero:setSequence("running");
 physics.addBody(hero)
 hero:play();
 -- Implementation for BUTTONS
-local upButton = display.newImage("up.png")
+local upButton;
+upButton = display.newImage("up.png")
 upButton:scale(0.5,0.5)
 upButton.x = display.contentWidth * .175
 upButton.y = display.contentHeight * .8 -25
 
-local downButton = display.newImage("down.png")
+local downButton;
+downButton = display.newImage("down.png")
 downButton:scale(0.5,0.5)
 downButton.x = display.contentWidth * .175
 downButton.y = display.contentHeight * .9 -25
 
-local leftButton = display.newImage("left.png")
+local leftButton;
+leftButton = display.newImage("left.png")
 leftButton:scale(0.5,0.5)
 leftButton.x = display.contentWidth * .1
 leftButton.y = display.contentHeight * .9 -25
 
-local rightButton = display.newImage("right.png")
+local rightButton;
+rightButton = display.newImage("right.png")
 rightButton:scale(0.5,0.5)
 rightButton.x = display.contentWidth * .25
 rightButton.y = display.contentHeight * .9 -25
@@ -143,10 +147,6 @@ function scene:create( event )
 	display.setStatusBar(display.HiddenStatusBar)
 
 	--adds an image to our game centered at x and y coordinates
-	local backbackground = display.newImage("background.jpg")
-	backbackground.x = 240
-	backbackground.y = 160
-
 	local backgroundfar = display.newImage("bgfar1.png")
 	backgroundfar.x = 480
 	backgroundfar.y = 160
@@ -260,7 +260,7 @@ end
 --actual function or it will not be able to find it
 --timer.performWithDelay(how often it will run in milliseconds, function to call,
 --how many times to call(-1 means forever))
-timer.performWithDelay(1, update, 100)
+timer.performWithDelay(1, update, -1)
 
 
 --the rest of the code remains the same
@@ -289,7 +289,6 @@ timer.performWithDelay(1, update, -1);
 
 	sceneGroup:insert(backgroundnear2)
 	sceneGroup:insert(backgroundnear1)
-	sceneGroup:insert(backbackground)
 	sceneGroup:insert(backgroundfar)
 	sceneGroup:insert(hero)
 	sceneGroup:insert(upButton)
@@ -297,30 +296,7 @@ timer.performWithDelay(1, update, -1);
 	sceneGroup:insert(leftButton)
 	sceneGroup:insert(rightButton)
 	
-
-
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 function scene:show( event )
