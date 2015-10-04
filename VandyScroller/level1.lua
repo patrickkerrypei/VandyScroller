@@ -6,34 +6,6 @@
 
 local composer = require( "composer" )
 local scene = composer.newScene()
-local options = {
-	width = 50,
-	height = 60,
-	numFrames = 2
-}
-
-local sequenceData = {
-    { name = "health0", start=1, count=1, time=0,   loopCount=1 },
-    { name = "health1", start=1, count=2, time=100, loopCount=1 },
-    { name = "health2", start=1, count=3, time=200, loopCount=1 },
-    { name = "health3", start=1, count=4, time=300, loopCount=1 },
-    { name = "health4", start=1, count=5, time=400, loopCount=1 },
-    { name = "health5", start=1, count=6, time=500, loopCount=1 }
-	}
-
--- sequences table
-local sequences_healthSheet = {
-    -- consecutive frames sequence
-    {
-        name = "healthSprite",
-        start = 1,
-        count = 5,
-        time = 800,
-        loopCount = 0,
-        loopDirection = "forward"
-    }
-}
-
 
 -- include Corona's "physics" library
 local physics = require "physics"
@@ -142,15 +114,9 @@ function scene:create( event )
 	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 
 	local sceneGroup = self.view
-	
-	--takes away the display bar at the top of the screen
-	display.setStatusBar(display.HiddenStatusBar)
 
 	--adds an image to our game centered at x and y coordinates
-<<<<<<< HEAD
-=======
 
->>>>>>> 3e1d65841b6bdbd77fc3873c3bf1edba994f9ae2
 	local backgroundfar = display.newImage("bgfar1.png")
 	backgroundfar.x = 480
 	backgroundfar.y = 160
@@ -271,9 +237,9 @@ timer.performWithDelay(1, update, -1)
 function update()
 
 if (right) then
-hero.x = hero.x + 1;
+hero.x = hero.x;
 else
-hero.x = hero.x - 1;
+hero.x = hero.x;
 end
 if (hero.x > 480) then
 right = false;
@@ -293,10 +259,7 @@ timer.performWithDelay(1, update, -1);
 
 	sceneGroup:insert(backgroundnear2)
 	sceneGroup:insert(backgroundnear1)
-<<<<<<< HEAD
-=======
-	
->>>>>>> 3e1d65841b6bdbd77fc3873c3bf1edba994f9ae2
+
 	sceneGroup:insert(backgroundfar)
 	sceneGroup:insert(hero)
 	sceneGroup:insert(upButton)
