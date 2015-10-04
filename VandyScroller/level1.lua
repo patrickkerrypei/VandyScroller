@@ -139,20 +139,7 @@ function rightButton:touch()
 end
 rightButton:addEventListener("touch",rightButton)
 
-
-function scene:create( event )
-
-	-- Called when the scene's view does not exist.
-	-- 
-	-- INSERT code here to initialize the scene
-	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
-
-	local sceneGroup = self.view
-
-
-
-
-	local function createWalls()
+local function createWalls()
 
 	local wallThickness = 5
 
@@ -177,8 +164,19 @@ function scene:create( event )
 	physics.addBody(wall, "static", {friction = 0, bounce = 0})
 end
 
-createWalls()
+function scene:create( event )
 
+	-- Called when the scene's view does not exist.
+	-- 
+	-- INSERT code here to initialize the scene
+	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
+
+	local sceneGroup = self.view
+
+
+	createWalls()
+
+	
 	--adds an image to our game centered at x and y coordinates
 
 	local backgroundfar = display.newImage("bgfar1.png")
