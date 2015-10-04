@@ -77,6 +77,7 @@ local astro = { density=1.0, friction=0.3, bounce=0.2 }
 astro.bodyType= "dynamic"
 
 physics.addBody( hero, astro )
+hero.isFixedRotation = true
 
 hero:setSequence("running");
 
@@ -281,7 +282,7 @@ local function update( event )
 	updateSpikes()
 	updateGhosts()
 	checkCollisions()
-	speed = speed
+	createWalls()
 
 end
 
