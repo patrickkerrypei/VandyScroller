@@ -119,7 +119,7 @@ end
 Runtime:addEventListener("touch",stop)
 
 function upButton:touch()
-	hero.y = hero.y -10
+	hero.y = hero.y - 6
 	hero.x = hero.x 
 end
 upButton:addEventListener("touch",upButton)
@@ -131,14 +131,9 @@ local function createWalls()
 	local wallThickness = 5
 
 	--top
-	wall = display.newRect(0, 0, display.contentWidth * 5, wallThickness-1)
+	wall = display.newRect(0, 0, display.contentWidth * 5, wallThickness + 10)
 	wall:setFillColor(0,0,0)
-	physics.addBody(wall, "static", {friction = 0, bounce = 0})
-
-	--bottom
-	wall = display.newRect(0, display.contentHeight - wallThickness, display.contentWidth, wallThickness)
-	wall:setFillColor(0,0,0)
-	physics.addBody(wall, "static", {friction = 0, bounce = 0})
+	physics.addBody(wall, "static", {friction = 0, bounce = 1})
 
 	--left
 	local wall = display.newRect( -44, 0, wallThickness, display.contentHeight * 10)
@@ -159,10 +154,7 @@ function scene:create( event )
 	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 
 	local sceneGroup = self.view
-
-
 	createWalls()
-
 	
 	--adds an image to our game centered at x and y coordinates
 
@@ -276,13 +268,14 @@ end
 --this will be called every frame(30 frames per second in our case, which is the Corona SDK default)
 local function update( event )
 	--updateBackgrounds will call a function made specifically to handle the background movement
+	createWalls()
 	updateBackgrounds()
 	updateBlocks()
 	updateBlasts()
 	updateSpikes()
 	updateGhosts()
 	checkCollisions()
-	createWalls()
+	
 
 end
 
