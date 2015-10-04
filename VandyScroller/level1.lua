@@ -91,40 +91,13 @@ collisionRect:setFillColor(140, 140, 140)
 collisionRect:setStrokeColor(180, 180, 180)
 collisionRect.alpha = 0
 
--- Implementation for BUTTONS
-local upButton;
-upButton = display.newImage("up.png")
-upButton:scale(0.5,0.5)
-upButton.x = display.contentWidth * .025
-upButton.y = display.contentHeight * .2
-
-local rightButton;
-rightButton = display.newImage("shoot.png")
-rightButton:scale(0.5,0.5)
-rightButton.x = display.contentWidth * .10
-rightButton.y = display.contentHeight * .2 
-
 hero.x = 0
 hero.y = 0
 local speed = 10
 
 
-local function stop (event)
-	if event.phase == "ended" then
 
-	hero.x = hero.x
-	hero.y = hero.y
-	end
-end
-Runtime:addEventListener("touch",stop)
 
-function upButton:touch()
-	hero.y = hero.y - 6
-	hero.x = hero.x 
-end
-upButton:addEventListener("touch",upButton)
-
-rightButton:addEventListener("tap",rightButton)
 
 local function createWalls()
 
@@ -263,6 +236,26 @@ for a=1, 5, 1 do
 	blocks:insert(newBlock)
 end
 
+--the only difference in the touched function is now if you touch the
+--right side of the screen the monster will fire off a little blue bolt
+function touched( event )
+    if(event.phase == "began") then
+        if(event.x < display.contentWidth / 2) then
+            hero.y = 0
+        else
+            for a=1, blasts.numChildren, 1 do
+                if(blasts[a].isAlive == false) then
+                    blasts[a].isAlive = true
+                    blasts[a].x = hero.x + 50
+                    blasts[a].y = hero.y
+                    break
+                end
+            end
+        end
+    end
+end
+
+Runtime:addEventListener("touch", touched, -1)
 
 --the update function will control most everything that happens in our game
 --this will be called every frame(30 frames per second in our case, which is the Corona SDK default)
@@ -402,16 +395,6 @@ function updateBlasts()
 end
 
 
-function rightButton:tap()
-	for a=1, blasts.numChildren, 1 do
-                if(blasts[a].isAlive == false) then
-                    blasts[a].isAlive = true
-                    blasts[a].x = hero.x + 50
-                    blasts[a].y = hero.y
-                    break
-                end
-            end
-end
 
 function updateBlocks()
      for a = 1, blocks.numChildren, 1 do
@@ -606,8 +589,6 @@ timer.performWithDelay(1, update, -1);
 	sceneGroup:insert(blasts)
 	sceneGroup:insert(ghosts)
 	sceneGroup:insert(hero)
-	sceneGroup:insert(upButton)
-	sceneGroup:insert(rightButton)
 	sceneGroup:insert(collisionRect)
 	
 end
