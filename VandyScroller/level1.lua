@@ -84,7 +84,7 @@ hero:play();
 --rectangle used for our collision detection
 --it will always be in front of the hero sprite
 --that way we know if the hero hit into anything
-local collisionRect = display.newRect(hero.x + 36, hero.y, 1, 70)
+local collisionRect = display.newRect(hero.x + 1, hero.y +1, 1, 1)
 collisionRect.strokeWidth = 1
 collisionRect:setFillColor(140, 140, 140)
 collisionRect:setStrokeColor(180, 180, 180)
@@ -202,7 +202,7 @@ createWalls()
     ghost = display.newImage("ghost.png")
     ghost.name = ("ghost" .. a)
     ghost.id = a
-    ghost.x = 800
+    ghost.x = 1
     ghost.y = 600
     ghost.speed = 0
     --variable used to determine if they are in play or not
@@ -217,7 +217,7 @@ for a = 1, 3, 1 do
     spike = display.newImage("spikeBlock.png")
     spike.name = ("spike" .. a)
     spike.id = a
-    spike.x = 900
+    spike.x = 1
     spike.y = 500
     spike.isAlive = false
     spikes:insert(spike)
@@ -229,7 +229,7 @@ for a=1, 5, 1 do
     blast = display.newImage("blast.png")
     blast.name = ("blast" .. a)
     blast.id = a
-    blast.x = 800
+    blast.x = 200
     blast.y = 500
     blast.isAlive = false
     blasts:insert(blast)
@@ -609,9 +609,9 @@ Runtime:addEventListener("touch", touched, -1)
 function update()
 
 if (right) then
-hero.x = hero.x+1
+hero.x = hero.x
 else
-hero.x = hero.x+1
+hero.x = hero.x
 end
 if (hero.x > 480) then
 right = false;
