@@ -109,12 +109,27 @@ local function stop (event)
 end
 Runtime:addEventListener("touch",stop)
 
+<<<<<<< HEAD
 function upButton:tap()
 	hero.x = hero.x +20
 	hero.y = hero.y -70
 
+=======
+local function upButton2(event)
+	if event.phase == "began" then
+
+	hero.x = hero.x
+	hero.y = hero.y + 10
+	end
 end
-upButton:addEventListener("tap",upButton)
+Runtime:addEventListener("tap",upButton2)
+
+
+function upButton:touch()
+	hero.y = hero.y -speed*5
+>>>>>>> parent of 850dc42... Enhanced sprite functionality
+end
+upButton:addEventListener("tap",upButton2)
 
 function downButton:touch()
 	hero.y = hero.y + speed
