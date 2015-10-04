@@ -32,9 +32,9 @@ function scene:create( event )
 	
 	-- create a widget button (which will loads level1.lua on release)
 	local playBtn = display.newImage("play_now.png")
-	playBtn:scale(0.5,0.5)
-	playBtn.x = display.contentWidth * 0.5
-	playBtn.y = display.contentHeight * .85
+	playBtn:scale(0.4, 0.4)
+	playBtn.x = 90
+	playBtn.y = display.contentHeight * 0.9
 	-- 'onRelease' event listener for playBtn
 	function playBtn:touch()
 	-- go to level1.lua scene
