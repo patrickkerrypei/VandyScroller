@@ -238,7 +238,33 @@ local function update( event )
 	updatealiens()
 	updatemeteors()
 	checkCollisions()
+
+	if speed == 0 then
+
+		physics.pause();
+		Runtime:removeEventListener("touch", touched )
+		--then composer.gotoScreen("endScreen", "fade", 500)
+		local backgroundFINAL = display.newImage("Game Over.png")
+		backgroundFINAL.x = display.contentWidth/2
+		backgroundFINAL.y = backgroundFINAL.y + 75
+
+		local playAgainBtn = display.newImage("play_again_button.png")
+		playAgainBtn:scale(0.4, 0.4)
+		playAgainBtn.x = display.contentWidth/2
+		playAgainBtn.y = display.contentHeight/2 + 30
+		-- 'onRelease' event listener for playBtn
+		function playAgainBtn:touch()
+		-- go to level1.lua scene
+		composer.gotoScene( "endScreen" , "fade", 500 )
+		-- indicates successful touch
+		end
+		playAgainBtn:addEventListener("touch",playAgainBtn)
+		-- all display objects must be inserted into group
+		sceneGroup:insert( backgroundFINAL )
+		sceneGroup:insert( playAgainBtn )
+		Runtime:addEventListener("touch", touched )
 	
+	end
 
 end
 
