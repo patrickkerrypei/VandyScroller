@@ -38,7 +38,7 @@ function scene:create( event )
 	-- 'onRelease' event listener for playBtn
 	function playBtn:touch()
 	-- go to level1.lua scene
-		composer.gotoScene( "level1", "fade", 500 )
+	composer.gotoScene( "level1", "fade", 500 )
 	-- indicates successful touch
 	end
 	playBtn:addEventListener("touch",playBtn)
