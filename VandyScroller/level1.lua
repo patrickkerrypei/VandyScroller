@@ -176,7 +176,7 @@ function scene:create( event )
 	local spikes = display.newGroup()
 	
 	for a = 1, 3, 1 do
-    ghost = display.newImage("ghost.png")
+    ghost = display.newImage("meteor.png")
     ghost.name = ("ghost" .. a)
     ghost.id = a
     ghost.x = 1
@@ -191,7 +191,7 @@ end
 
 --create spikes
 for a = 1, 3, 1 do
-    spike = display.newImage("spikeBlock.png")
+    spike = display.newImage("alien.png")
     spike.name = ("spike" .. a)
     spike.id = a
     spike.x = 100
