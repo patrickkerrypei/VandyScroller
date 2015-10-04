@@ -147,6 +147,10 @@ function scene:create( event )
 	display.setStatusBar(display.HiddenStatusBar)
 
 	--adds an image to our game centered at x and y coordinates
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3e1d65841b6bdbd77fc3873c3bf1edba994f9ae2
 	local backgroundfar = display.newImage("bgfar1.png")
 	backgroundfar.x = 480
 	backgroundfar.y = 160
@@ -289,6 +293,10 @@ timer.performWithDelay(1, update, -1);
 
 	sceneGroup:insert(backgroundnear2)
 	sceneGroup:insert(backgroundnear1)
+<<<<<<< HEAD
+=======
+	
+>>>>>>> 3e1d65841b6bdbd77fc3873c3bf1edba994f9ae2
 	sceneGroup:insert(backgroundfar)
 	sceneGroup:insert(hero)
 	sceneGroup:insert(upButton)
