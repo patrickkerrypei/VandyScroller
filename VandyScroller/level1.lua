@@ -12,6 +12,12 @@ local options = {
 	numFrames = 2
 }
 
+local SPACECOWBOY = audio.loadSound( "Joker.mp3" )
+local PEW = audio.loadSound("Pew.mp3")
+local HE_DEAD = audio.loadSound("Pacman.mp3")
+
+local SMBandChannel = audio.play(SPACECOWBOY, {channel=1, loops=-1, fadein=2000})
+
 -- include Corona's "physics" library
 local physics = require "physics"
 physics.start(); physics.pause()
@@ -21,8 +27,8 @@ physics.setGravity(0,6)
 
 -- forward declarations and other locals
 local screenW, screenH, halfW = display.contentWidth, display.contentHeight, display.contentWidth*0.5
-
-local imgsheetSetup= 
+local
+ imgsheetSetup= 
 {
 width = 100,
 height = 100,
@@ -210,6 +216,8 @@ end
 --right side of the screen the monster will fire off a little blue bolt
 function touched( event )
     if(event.phase == "began") then
+    	local PewChannel = audio.play(PEW)
+
         if(event.x < display.contentWidth / 2) then
             hero.y = 0
         else
@@ -259,6 +267,11 @@ function checkCollisions()
 			if(collisionRect.y - 10> aliens[a].y - 170 and aliens[a].x - 40 < collisionRect.x and aliens[a].x + 40 > collisionRect.x) then
 				--stop the hero
 				speed = 0
+				flag = true
+				if (flag) then
+					local pacChannel = audio.play(HE_DEAD, {channel=2, loops=0, fadein=500,})
+				end
+				flag = false
 			end
 		end
 	end
@@ -270,6 +283,11 @@ function checkCollisions()
 			if(((  ((hero.y-meteors[a].y))<70) and ((hero.y - meteors[a].y) > -70)) and (meteors[a].x - 40 < collisionRect.x and meteors[a].x + 40 > collisionRect.x)) then
 				--stop the hero
 				speed = 0
+				flag = true
+				if (flag) then
+					local pacChannel = audio.play(HE_DEAD, {channel=2, loops=0, fadein=500})
+				end
+				flag = false
 			end
 		end
 	end
@@ -341,8 +359,8 @@ function updateBlasts()
 					blasts[a].x = 800
 					blasts[a].y = 500
 					blasts[a].isAlive = false
-					aliens[b].x = 90
-					aliens[b].y = 50
+					aliens[b].x = 900
+					aliens[b].y = 500
 					aliens[b].isAlive = false
                 end
             end
