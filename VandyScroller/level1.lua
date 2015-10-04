@@ -12,29 +12,6 @@ local options = {
 	numFrames = 2
 }
 
-local sequenceData = {
-    { name = "health0", start=1, count=1, time=0,   loopCount=1 },
-    { name = "health1", start=1, count=2, time=100, loopCount=1 },
-    { name = "health2", start=1, count=3, time=200, loopCount=1 },
-    { name = "health3", start=1, count=4, time=300, loopCount=1 },
-    { name = "health4", start=1, count=5, time=400, loopCount=1 },
-    { name = "health5", start=1, count=6, time=500, loopCount=1 }
-	}
-
--- sequences table
-local sequences_healthSheet = {
-    -- consecutive frames sequence
-    {
-        name = "healthSprite",
-        start = 1,
-        count = 5,
-        time = 800,
-        loopCount = 0,
-        loopDirection = "forward"
-    }
-}
-
-
 -- include Corona's "physics" library
 local physics = require "physics"
 physics.start(); physics.pause()
@@ -65,7 +42,6 @@ local sequenceData =
 --And assign it to the object hero using the display.newSprite function
 local hero = display.newSprite(spriteSheet, sequenceData);
 
-
 x = display.contentWidth/2;
 y = display.contentHeight/2;
 right = true;
@@ -94,10 +70,6 @@ collisionRect.alpha = 0
 hero.x = 0
 hero.y = 0
 local speed = 10
-
-
-
-
 
 local function createWalls()
 
@@ -145,32 +117,32 @@ function scene:create( event )
 
 	--create a new group to hold all of our blocks
 	local blocks = display.newGroup()
-	local ghosts = display.newGroup()
-	local spikes = display.newGroup()
+	local meteors = display.newGroup()
+	local aliens = display.newGroup()
 	
 	for a = 1, 3, 1 do
-    ghost = display.newImage("meteor.png")
-    ghost.name = ("ghost" .. a)
-    ghost.id = a
-    ghost.x = 1
-    ghost.y = 600
-    ghost.speed = 0
+    meteor = display.newImage("meteor.png")
+    meteor.name = ("meteor" .. a)
+    meteor.id = a
+    meteor.x = 1
+    meteor.y = 600
+    meteor.speed = 0
     --variable used to determine if they are in play or not
-    ghost.isAlive = false
-    --make the ghosts transparent and more... ghostlike!
-    ghost.alpha = .5
-    ghosts:insert(ghost)
+    meteor.isAlive = false
+    --make the meteors transparent and more... meteorlike!
+    meteor.alpha = .5
+    meteors:insert(meteor)
 end
 
---create spikes
+--create aliens
 for a = 1, 3, 1 do
-    spike = display.newImage("alien.png")
-    spike.name = ("spike" .. a)
-    spike.id = a
-    spike.x = 100
-    spike.y = 500
-    spike.isAlive = false
-    spikes:insert(spike)
+    alien = display.newImage("alien.png")
+    alien.name = ("alien" .. a)
+    alien.id = a
+    alien.x = 100
+    alien.y = 500
+    alien.isAlive = false
+    aliens:insert(alien)
 end
 
 local blasts = display.newGroup()
@@ -185,8 +157,6 @@ for a=1, 5, 1 do
     blasts:insert(blast)
 	end
 	
-
-
 	--setup some variables that we will use to position the ground
 	local groundMin = 420
 	local groundMax = 340
@@ -265,8 +235,8 @@ local function update( event )
 	updateBackgrounds()
 	updateBlocks()
 	updateBlasts()
-	updateSpikes()
-	updateGhosts()
+	updatealiens()
+	updatemeteors()
 	checkCollisions()
 	
 
@@ -283,20 +253,21 @@ function checkCollisions()
 		end
 	end
 	
-	--stop the game if the hero runs into a spike wall
-	for a = 1, spikes.numChildren, 1 do
-		if(spikes[a].isAlive == true) then
-			if(collisionRect.y - 10> spikes[a].y - 170 and spikes[a].x - 40 < collisionRect.x and spikes[a].x + 40 > collisionRect.x) then
+	--stop the game if the hero runs into a alien wall
+	for a = 1, aliens.numChildren, 1 do
+		if(aliens[a].isAlive == true) then
+			if(collisionRect.y - 10> aliens[a].y - 170 and aliens[a].x - 40 < collisionRect.x and aliens[a].x + 40 > collisionRect.x) then
 				--stop the hero
 				speed = 0
 			end
 		end
 	end
 	
-	--make sure the player didn't get hit by a ghost!
-	for a = 1, ghosts.numChildren, 1 do
-		if(ghosts[a].isAlive == true) then
-			if(((  ((hero.y-ghosts[a].y))<70) and ((hero.y - ghosts[a].y) > -70)) and (ghosts[a].x - 40 < collisionRect.x and ghosts[a].x + 40 > collisionRect.x)) then
+	
+	--make sure the player didn't get hit by a meteor!
+	for a = 1, meteors.numChildren, 1 do
+		if(meteors[a].isAlive == true) then
+			if(((  ((hero.y-meteors[a].y))<70) and ((hero.y - meteors[a].y) > -70)) and (meteors[a].x - 40 < collisionRect.x and meteors[a].x + 40 > collisionRect.x)) then
 				--stop the hero
 				speed = 0
 			end
@@ -314,37 +285,37 @@ function checkCollisions()
 	end
 end
 
---update the ghosts if they are alive
-function updateGhosts()
-	for a = 1, ghosts.numChildren, 1 do
-		if(ghosts[a].isAlive == true) then
-			(ghosts[a]):translate(speed * -1, 0)
-			if(ghosts[a].y > hero.y) then
-				ghosts[a].y = ghosts[a].y - 1
+--update the meteors if they are alive
+function updatemeteors()
+	for a = 1, meteors.numChildren, 1 do
+		if(meteors[a].isAlive == true) then
+			(meteors[a]):translate(speed * -1, 0)
+			if(meteors[a].y > hero.y) then
+				meteors[a].y = meteors[a].y - 1
 			end
-			if(ghosts[a].y < hero.y) then
-				ghosts[a].y = ghosts[a].y + 1
+			if(meteors[a].y < hero.y) then
+				meteors[a].y = meteors[a].y + 1
 			end
-			if(ghosts[a].x < -80) then
-				ghosts[a].x = 800
-				ghosts[a].y = 600
-				ghosts[a].speed = 0
-				ghosts[a].isAlive = false;
+			if(meteors[a].x < -80) then
+				meteors[a].x = 800
+				meteors[a].y = 600
+				meteors[a].speed = 1
+				meteors[a].isAlive = false;
 			end
 		end
     end
 end
 
---check to see if the spikes are alive or not, if they are
+--check to see if the aliens are alive or not, if they are
 --then update them appropriately
-function updateSpikes()
-    for a = 1, spikes.numChildren, 1 do
-        if(spikes[a].isAlive == true) then
-            (spikes[a]):translate(speed * -1, 0)
-            if(spikes[a].x < -80) then
-                spikes[a].x = 900
-                spikes[a].y = 500
-                spikes[a].isAlive = false
+function updatealiens()
+    for a = 1, aliens.numChildren, 1 do
+        if(aliens[a].isAlive == true) then
+            (aliens[a]):translate(speed * -1, 0)
+            if(aliens[a].x < -80) then
+                aliens[a].x = 900
+                aliens[a].y = 500
+                aliens[a].isAlive = false
             end
         end
     end
@@ -363,38 +334,36 @@ function updateBlasts()
                 blasts[a].isAlive = false
             end
         end
-                --check for collisions between the blasts and the spikes
-        for b = 1, spikes.numChildren, 1 do
-            if(spikes[b].isAlive == true) then
-                if(blasts[a].y - 25 > spikes[b].y - 120 and blasts[a].y + 25 < spikes[b].y + 120 and spikes[b].x - 40 < blasts[a].x + 25 and spikes[b].x + 40 > blasts[a].x - 25) then
+                --check for collisions between the blasts and the aliens
+        for b = 1, aliens.numChildren, 1 do
+            if(aliens[b].isAlive == true) then
+                if(blasts[a].y - 25 > aliens[b].y - 120 and blasts[a].y + 25 < aliens[b].y + 120 and aliens[b].x - 40 < blasts[a].x + 25 and aliens[b].x + 40 > blasts[a].x - 25) then
 					blasts[a].x = 800
 					blasts[a].y = 500
 					blasts[a].isAlive = false
-					spikes[b].x = 900
-					spikes[b].y = 500
-					spikes[b].isAlive = false
+					aliens[b].x = 900
+					aliens[b].y = 500
+					aliens[b].isAlive = false
                 end
             end
         end
- 
-		--check for collisions between the blasts and the ghosts
-		for b = 1, ghosts.numChildren, 1 do
-			if(ghosts[b].isAlive == true) then
-				if(blasts[a].y - 25 > ghosts[b].y - 120 and blasts[a].y + 25 < ghosts[b].y + 120 and ghosts[b].x - 40 < blasts[a].x + 25 and ghosts[b].x + 40 > blasts[a].x - 25) then
+ 	
+		--check for collisions between the blasts and the meteors
+		for b = 1, meteors.numChildren, 1 do
+			if(meteors[b].isAlive == true) then
+				if(blasts[a].y - 25 > meteors[b].y - 120 and blasts[a].y + 25 < meteors[b].y + 120 and meteors[b].x - 40 < blasts[a].x + 25 and meteors[b].x + 40 > blasts[a].x - 25) then
 					blasts[a].x = 800
 					blasts[a].y = 500
 					blasts[a].isAlive = false
-					ghosts[b].x = 800
-					ghosts[b].y = 600
-					ghosts[b].isAlive = false
-					ghosts[b].speed = 0
+					meteors[b].x = 800
+					meteors[b].y = 600
+					meteors[b].isAlive = false
+					meteors[b].speed = 0
 				end
             end
         end
     end
 end
-
-
 
 function updateBlocks()
      for a = 1, blocks.numChildren, 1 do
@@ -409,20 +378,23 @@ function updateBlocks()
 			 else
 				  (blocks[a]).x, (blocks[a]).y = newX, groundLevel
 			 end
-			--by setting up the spikes this way we are guaranteed to
-			--only have 3 spikes out at most at a time.
+			--by setting up the aliens this way we are guaranteed to
+			--only have 3 aliens out at most at a time.
 			if(inEvent == 12) then
-				for a=1, spikes.numChildren, 1 do
-					if(spikes[a].isAlive == true) then
+				for a=1, aliens.numChildren, 1 do
+					if(aliens[a].isAlive == true) then
 					--do nothing
 					else
-					spikes[a].isAlive = true
-					spikes[a].y = groundLevel - 200
-					spikes[a].x = newX
+					aliens[a].isAlive = true
+					aliens[a].y = groundLevel - 200
+					aliens[a].x = newX
 					break
 					end
 				end
 			end
+		
+
+
 			 checkEvent()
 			else
 				 (blocks[a]):translate(speed * -1, 0)
@@ -488,7 +460,7 @@ function checkEvent()
 					eventRun = 1
 			end
 			
-			--ghost event
+			--meteor event
 			if(check > 60 and check < 73) then
 					inEvent = 13
 					eventRun = 1
@@ -517,18 +489,18 @@ function runEvent()
      end
 	 
 	--this will be a little bit different as we want this to really
-	--make the game feel even more random. change where the ghosts
+	--make the game feel even more random. change where the meteors
 	--spawn and how fast they come at the hero.
 	--this will be a little bit different as we want this to really
-	--make the game feel even more random. change where the ghosts
+	--make the game feel even more random. change where the meteors
 	--spawn and how fast they come at the hero.
 if(inEvent == 13) then
-	for a=1, ghosts.numChildren, 1 do
-		if(ghosts[a].isAlive == false) then
-			ghosts[a].isAlive = true
-			ghosts[a].x = 500
-			ghosts[a].y = math.random(-50, 400)
-			ghosts[a].speed = math.random(2,4)
+	for a=1, meteors.numChildren, 1 do
+		if(meteors[a].isAlive == false) then
+			meteors[a].isAlive = true
+			meteors[a].x = 500
+			meteors[a].y = math.random(-50, 400)
+			meteors[a].speed = math.random(2,4)
 			break
 			end
 		end
@@ -557,7 +529,6 @@ end
 --how many times to call(-1 means forever))
 timer.performWithDelay(1, update, -1)
 
-
 --the rest of the code remains the same
 function update()
 
@@ -578,16 +549,14 @@ end
 
 timer.performWithDelay(1, update, -1);
 
-
 	-- all display objects must be inserted into group
-	
 
 	sceneGroup:insert(backgroundnear2)
 	sceneGroup:insert(backgroundnear1)
 	sceneGroup:insert(backgroundfar)
-	sceneGroup:insert(spikes)
+	sceneGroup:insert(aliens)
 	sceneGroup:insert(blasts)
-	sceneGroup:insert(ghosts)
+	sceneGroup:insert(meteors)
 	sceneGroup:insert(hero)
 	sceneGroup:insert(collisionRect)
 	
@@ -597,9 +566,6 @@ end
 function scene:show( event )
 	local sceneGroup = self.view
 	local phase = event.phase
-	
-	
-
 	if phase == "will" then
 		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then
