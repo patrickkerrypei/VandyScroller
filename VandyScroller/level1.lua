@@ -550,7 +550,6 @@ end
 timer.performWithDelay(1, update, -1);
 
 	-- all display objects must be inserted into group
-
 	sceneGroup:insert(backgroundnear2)
 	sceneGroup:insert(backgroundnear1)
 	sceneGroup:insert(backgroundfar)
