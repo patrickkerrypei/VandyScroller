@@ -488,19 +488,19 @@ function checkEvent()
                eventRun = 1
           end
 		  
-		  if(check > 45 and check < 69 ) then
+		  if(check > 98) then
 				 inEvent = 11
 				 eventRun = 2
 			end			
 			--the more frequently you want events to happen then
 			--greater you should make the checks
-			if(check > 29 and check < 44) then
+			if(check > 41 and check < 81) then
 					inEvent = 12
 					eventRun = 1
 			end
 			
 			--meteor event
-			if(check > 0 and check < 28) then
+			if(check > 0 and check < 40) then
 					inEvent = 13
 					eventRun = 1
 			end
