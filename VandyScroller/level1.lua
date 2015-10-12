@@ -12,11 +12,11 @@ local options = {
 	numFrames = 2
 }
 
-local SPACECOWBOY = audio.loadSound( "Joker.mp3" )
-local PEW = audio.loadSound("Pew.mp3")
-local HE_DEAD = audio.loadSound("Pacman.mp3")
+--local SPACECOWBOY = audio.loadSound( "Joker.mp3" )
+--local PEW = audio.loadSound("Pew.mp3")
+--local HE_DEAD = audio.loadSound("Pacman.mp3")
 
-local SMBandChannel = audio.play(SPACECOWBOY, {channel=1, loops=-1, fadein=2000})
+--local SMBandChannel = audio.play(SPACECOWBOY, {channel=1, loops=-1, fadein=2000})
 
 -- include Corona's "physics" library
 local physics = require "physics"
@@ -51,7 +51,7 @@ local hero = display.newSprite(spriteSheet, sequenceData);
 x = display.contentWidth/2;
 y = display.contentHeight/2;
 right = true;
-hero.x = 50;
+hero.x = 0;
 hero.y = 50;
 hero.accel = 0
 hero. gravity = -6
@@ -73,8 +73,6 @@ collisionRect:setFillColor(140, 140, 140)
 collisionRect:setStrokeColor(180, 180, 180)
 collisionRect.alpha = 0
 
-hero.x = 0
-hero.y = 0
 local speed = 10
 
 local function createWalls()
@@ -91,10 +89,7 @@ local function createWalls()
 	wall:setFillColor(0,0,0)
 	physics.addBody(wall, "static", {friction = 0, bounce = 0})
 
-	--right
-	wall = display.newRect(display.contentWidth - wallThickness + 49, 0, wallThickness, display.contentHeight*5)
-	wall:setFillColor(0,0,0)
-	physics.addBody(wall, "static", {friction = 0, bounce = 0})
+
 end
 
 function scene:create( event )
@@ -126,7 +121,7 @@ function scene:create( event )
 	local meteors = display.newGroup()
 	local aliens = display.newGroup()
 	
-	for a = 1, 3, 1 do
+	for a = 1, 5, 1 do
     meteor = display.newImage("meteor.png")
     meteor.name = ("meteor" .. a)
     meteor.id = a
@@ -141,7 +136,7 @@ function scene:create( event )
 end
 
 --create aliens
-for a = 1, 3, 1 do
+for a = 1, 5, 1 do
     alien = display.newImage("alien.png")
     alien.name = ("alien" .. a)
     alien.id = a
@@ -198,6 +193,7 @@ for a=1, 5, 1 do
 		isDone = true
 	end
 
+
 	--now that we have the right image for the block we are going
 	--to give it some member variables that will help us keep track
 	--of each block as well as position them where we want them.
@@ -216,10 +212,10 @@ end
 --right side of the screen the monster will fire off a little blue bolt
 function touched( event )
     if(event.phase == "began") then
-    	local PewChannel = audio.play(PEW)
+    	--local PewChannel = audio.play(PEW)
 
         if(event.x < display.contentWidth / 2) then
-            hero.y = 0
+            hero.y = 15
         else
             for a=1, blasts.numChildren, 1 do
                 if(blasts[a].isAlive == false) then
@@ -239,12 +235,11 @@ Runtime:addEventListener("touch", touched, -1)
 --this will be called every frame(30 frames per second in our case, which is the Corona SDK default)
 local function update( event )
 	--updateBackgrounds will call a function made specifically to handle the background movement
-	createWalls()
 	updateBackgrounds()
 	updateBlocks()
 	updateBlasts()
-	updatealiens()
-	updatemeteors()
+	updateAliens()
+	updateMeteors()
 	checkCollisions()
 
 	if speed == 0 then
@@ -295,7 +290,7 @@ function checkCollisions()
 				speed = 0
 				flag = true
 				if (flag) then
-					local pacChannel = audio.play(HE_DEAD, {channel=2, loops=0, fadein=500,})
+					--local pacChannel = audio.play(HE_DEAD, {channel=2, loops=0, fadein=500,})
 				end
 				flag = false
 			end
@@ -311,7 +306,7 @@ function checkCollisions()
 				speed = 0
 				flag = true
 				if (flag) then
-					local pacChannel = audio.play(HE_DEAD, {channel=2, loops=0, fadein=500})
+					--local pacChannel = audio.play(HE_DEAD, {channel=2, loops=0, fadein=500})
 				end
 				flag = false
 			end
@@ -330,7 +325,7 @@ function checkCollisions()
 end
 
 --update the meteors if they are alive
-function updatemeteors()
+function updateMeteors()
 	for a = 1, meteors.numChildren, 1 do
 		if(meteors[a].isAlive == true) then
 			(meteors[a]):translate(speed * -1, 0)
@@ -352,7 +347,7 @@ end
 
 --check to see if the aliens are alive or not, if they are
 --then update them appropriately
-function updatealiens()
+function updateAliens()
     for a = 1, aliens.numChildren, 1 do
         if(aliens[a].isAlive == true) then
             (aliens[a]):translate(speed * -1, 0)
@@ -387,11 +382,10 @@ function updateBlasts()
 					blasts[a].isAlive = false
 					aliens[b].x = 900
 					aliens[b].y = 500
-<<<<<<< HEAD
+
 					aliens[b].isAlive = false
-=======
+
 					aliens[b].isAlive = true
->>>>>>> f08d8bbf6f79aa3ca16de8700a29057380aaac5f
                 end
             end
         end
@@ -447,7 +441,7 @@ function updateBlocks()
 		 end
 end
 
-function updatehero()
+function updateHero()
 	--if our hero is jumping then switch to the jumping animation
 	--if not keep playing the running animation
 	if(onGround) then
@@ -494,19 +488,19 @@ function checkEvent()
                eventRun = 1
           end
 		  
-		  if(check > 98) then
+		  if(check > 45 and check < 69 ) then
 				 inEvent = 11
 				 eventRun = 2
 			end			
 			--the more frequently you want events to happen then
 			--greater you should make the checks
-			if(check > 72 and check < 81) then
+			if(check > 29 and check < 44) then
 					inEvent = 12
 					eventRun = 1
 			end
 			
 			--meteor event
-			if(check > 60 and check < 73) then
+			if(check > 0 and check < 28) then
 					inEvent = 13
 					eventRun = 1
 			end
@@ -520,12 +514,9 @@ end
 --updates the appropriate items. Notice that we check to make sure the ground is within a
 --certain range, we don't want the ground to spawn above or below whats visible on the screen.
 function runEvent()
-     if(inEvent < 6) then
-          groundLevel = groundLevel + 40
-     end
-     if(inEvent > 5 and inEvent < 11) then
-          groundLevel = groundLevel - 40
-     end
+     if(inEvent >0) then
+          groundLevel = groundLevel 
+    end
      if(groundLevel < groundMax) then
           groundLevel = groundMax
      end
@@ -536,16 +527,14 @@ function runEvent()
 	--this will be a little bit different as we want this to really
 	--make the game feel even more random. change where the meteors
 	--spawn and how fast they come at the hero.
-	--this will be a little bit different as we want this to really
-	--make the game feel even more random. change where the meteors
-	--spawn and how fast they come at the hero.
+
 if(inEvent == 13) then
 	for a=1, meteors.numChildren, 1 do
 		if(meteors[a].isAlive == false) then
 			meteors[a].isAlive = true
 			meteors[a].x = 500
 			meteors[a].y = math.random(-50, 400)
-			meteors[a].speed = math.random(2,4)
+			meteors[a].speed = math.random(2,8)
 			break
 			end
 		end
@@ -555,7 +544,6 @@ end
 function updateBackgrounds()
 	--far background movement
 	backgroundfar.x = backgroundfar.x - (speed/55)
-
 	--near background movement
 	backgroundnear1.x = backgroundnear1.x - (speed/5)
 	if(backgroundnear1.x < -239) then
@@ -573,26 +561,7 @@ end
 --timer.performWithDelay(how often it will run in milliseconds, function to call,
 --how many times to call(-1 means forever))
 timer.performWithDelay(1, update, -1)
-
---the rest of the code remains the same
-function update()
-
-if (right) then
-hero.x = hero.x
-else
-hero.x = hero.x
-end
-if (hero.x > 480) then
-right = false;
-hero.xScale = -1;
-end
-if (hero.x < 0) then
-right = true;
-hero.xScale = 1;
-end
-end
-
-timer.performWithDelay(1, update, -1);
+ 
 
 	-- all display objects must be inserted into group
 	sceneGroup:insert(backgroundnear2)
@@ -638,7 +607,7 @@ function scene:hide( event )
 	
 end
 
-function scene:destroy( event )
+function scene:destroy( event )  
 
 	-- Called prior to the removal of scene's "view" (sceneGroup)
 	-- 
@@ -661,3 +630,5 @@ scene:addEventListener( "destroy", scene )
 -----------------------------------------------------------------------------------------
 
 return scene
+
+
