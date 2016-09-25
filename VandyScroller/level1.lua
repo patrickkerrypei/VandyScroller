@@ -54,7 +54,7 @@ right = true;
 hero.x = 0;
 hero.y = 50;
 hero.accel = 0
-hero. gravity = -6
+hero.gravity = -6
 local astro = { density=1.0, friction=0.3, bounce=0.2 }
 astro.bodyType= "dynamic"
 
@@ -120,8 +120,10 @@ function scene:create( event )
 	local blocks = display.newGroup()
 	local meteors = display.newGroup()
 	local aliens = display.newGroup()
-	
+	local blasts = display.newGroup()
+
 	for a = 1, 5, 1 do
+
     meteor = display.newImage("meteor.png")
     meteor.name = ("meteor" .. a)
     meteor.id = a
@@ -133,10 +135,7 @@ function scene:create( event )
     --make the meteors transparent and more... meteorlike!
     meteor.alpha = .5
     meteors:insert(meteor)
-end
 
---create aliens
-for a = 1, 5, 1 do
     alien = display.newImage("alien.png")
     alien.name = ("alien" .. a)
     alien.id = a
@@ -144,20 +143,17 @@ for a = 1, 5, 1 do
     alien.y = 500
     alien.isAlive = false
     aliens:insert(alien)
-end
 
-local blasts = display.newGroup()
---create blasts
-for a=1, 5, 1 do
     blast = display.newImage("blast.png")
-    blast.name = ("blast" .. a)
-    blast.id = a
-    blast.x = 200
-    blast.y = 500
-    blast.isAlive = false
-    blasts:insert(blast)
+	blast.name = ("blast" .. a)
+	blast.id = a
+	blast.x = 200
+	blast.y = 500
+	blast.isAlive = false
+	blasts:insert(blast)
+
 	end
-	
+
 	--setup some variables that we will use to position the ground
 	local groundMin = 420
 	local groundMax = 340
@@ -180,7 +176,6 @@ for a=1, 5, 1 do
 
 	local blockShape = { -halfW,-34, halfW,-34, halfW,34, -halfW,34 }
 	
-	print (numGen)
 	if(numGen == 1 and isDone == false) then
 		newBlock = display.newImage("rocks.jpg")
 		physics.addBody( newBlock, "kinematic", { frictional=0.3} )
@@ -243,30 +238,10 @@ local function update( event )
 	checkCollisions()
 
 	if speed == 0 then
-
-		physics.pause();
-		Runtime:removeEventListener("touch", touched )
-		--then composer.gotoScreen("endScreen", "fade", 500)
-		local backgroundFINAL = display.newImage("Game Over.png")
-		backgroundFINAL.x = display.contentWidth/2
-		backgroundFINAL.y = backgroundFINAL.y + 75
-
-		local playAgainBtn = display.newImage("play_again_button.png")
-		playAgainBtn:scale(0.4, 0.4)
-		playAgainBtn.x = display.contentWidth/2
-		playAgainBtn.y = display.contentHeight/2 + 30
-		-- 'onRelease' event listener for playBtn
-		function playAgainBtn:touch()
-		-- go to level1.lua scene
-		composer.gotoScene( "endScreen" , "fade", 500 )
-		-- indicates successful touch
-		end
-		playAgainBtn:addEventListener("touch",playAgainBtn)
-		-- all display objects must be inserted into group
-		sceneGroup:insert( backgroundFINAL )
-		sceneGroup:insert( playAgainBtn )
-		Runtime:addEventListener("touch", touched )
-	
+		timer.cancel(event.source)
+		blocks:removeSelf()
+		blocks = nil
+		composer.gotoScene("menu","fade",500)
 	end
 
 end
@@ -561,7 +536,6 @@ end
 --timer.performWithDelay(how often it will run in milliseconds, function to call,
 --how many times to call(-1 means forever))
 timer.performWithDelay(1, update, -1)
- 
 
 	-- all display objects must be inserted into group
 	sceneGroup:insert(backgroundnear2)
@@ -600,6 +574,7 @@ function scene:hide( event )
 		--
 		-- INSERT code here to pause the scene
 		-- e.g. stop timers, stop animation, unload sounds, etc.)
+		physics.start()
 		physics.stop()
 	elseif phase == "did" then
 		-- Called when the scene is now off screen
@@ -614,7 +589,7 @@ function scene:destroy( event )
 	-- INSERT code here to cleanup the scene
 	-- e.g. remove display objects, remove touch listeners, save state, etc.
 	local sceneGroup = self.view
-	
+	Runtime:removeEventListener("touch", touched )
 	package.loaded[physics] = nil
 	physics = nil
 end

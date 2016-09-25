@@ -56,6 +56,7 @@ function scene:show( event )
 	elseif phase == "did" then
 		-- Called when the scene is now on screen
 		-- 
+		composer.removeScene("level1")
 		-- INSERT code here to make the scene come alive
 		-- e.g. start timers, begin animation, play audio, etc.
 	end	
